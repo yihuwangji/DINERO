@@ -98,6 +98,7 @@ td{padding:11px 12px;font-size:13px;vertical-align:top}
 .sig-watch{background:rgba(167,139,250,.12);color:var(--purple)}
 .act-btn{background:none;border:1px solid var(--border);color:var(--dim);font-size:10px;padding:4px 10px;border-radius:5px;cursor:pointer;transition:all .15s;font-family:'JetBrains Mono',monospace}
 .act-btn:hover{border-color:var(--blue);color:var(--blue)}
+
 .price-cell{display:flex;align-items:center;gap:4px}
 .ldot{width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0;animation:pulse 2s ease infinite}
 .mdot{width:5px;height:5px;border-radius:50%;background:var(--amber);display:inline-block;flex-shrink:0}
@@ -139,29 +140,29 @@ td{padding:11px 12px;font-size:13px;vertical-align:top}
 
 <!-- HEADER -->
 <div class="hdr-top">
-  <div>
-    <div class="hdr-label">Portfolio Tracker · 实时价格版</div>
-    <div class="hdr-title">我的<span>投资</span>组合</div>
-  </div>
-  <div class="hdr-date" id="dateDisplay"></div>
+ <div>
+ <div class="hdr-label">Portfolio Tracker · 实时价格版</div>
+ <div class="hdr-title">我的<span>投资</span>组合</div>
+ </div>
+ <div class="hdr-date" id="dateDisplay"></div>
 </div>
 
 <!-- PRICE CONTROL BAR -->
 <div class="price-bar">
-  <div class="pbar-left">
-    <div class="pbar-label"><span class="live-dot"></span>实时价格</div>
-    <div class="pbar-status" id="refreshStatus">⏳ 正在获取价格...</div>
-  </div>
-  <button class="btn-refresh" id="btnRefresh" onclick="autoUpdatePrices()">🔄 立即刷新</button>
-  <label class="auto-lbl"><input type="checkbox" id="autoToggle" style="accent-color:var(--green)"> 自动60s</label>
-  <div class="fh-wrap">
-    <span>美股Key:</span>
-    <input id="fhKey" type="password" placeholder="Finnhub Key（美股自动更新）"
-      title="前往 finnhub.io 免费注册，获取API Key后粘贴此处，即可自动更新TSLA/QQQ/NVDA/MSFT等美股价格"
-      oninput="FINNHUB_KEY=this.value;localStorage.setItem('fhk',this.value)"/>
-    <a href="https://finnhub.io" target="_blank">免费注册 →</a>
-  </div>
-  <button class="act-btn" onclick="exportCSV()" style="white-space:nowrap">📥 导出CSV</button>
+ <div class="pbar-left">
+ <div class="pbar-label"><span class="live-dot"></span>实时价格</div>
+ <div class="pbar-status" id="refreshStatus">⏳ 正在获取价格...</div>
+ </div>
+ <button class="btn-refresh" id="btnRefresh" onclick="autoUpdatePrices()">🔄 立即刷新</button>
+ <label class="auto-lbl"><input type="checkbox" id="autoToggle" style="accent-color:var(--green)"> 自动60s</label>
+ <div class="fh-wrap">
+ <span>美股Key:</span>
+ <input id="fhKey" type="password" placeholder="Finnhub Key（美股自动更新）"
+ title="前往 finnhub.io 免费注册，获取API Key后粘贴此处，即可自动更新TSLA/QQQ/NVDA/MSFT等美股价格"
+ oninput="FINNHUB_KEY=this.value;localStorage.setItem('fhk',this.value)"/>
+ <a href="https://finnhub.io" target="_blank">免费注册 →</a>
+ </div>
+ <button class="act-btn" onclick="exportCSV()" style="white-space:nowrap">📥 导出CSV</button>
 </div>
 
 <!-- TICKER TAPE -->
@@ -172,26 +173,26 @@ td{padding:11px 12px;font-size:13px;vertical-align:top}
 
 <!-- SUMMARY -->
 <div class="sum-row">
-  <div class="sum-card">
-    <div class="sum-label">总资产估值</div>
-    <div class="sum-val" id="sumTotal">—</div>
-    <div class="sum-sub">折合人民币（×7.25）</div>
-  </div>
-  <div class="sum-card">
-    <div class="sum-label">总浮盈/亏</div>
-    <div class="sum-val" id="sumPnl">—</div>
-    <div class="sum-sub" id="sumPct">—</div>
-  </div>
-  <div class="sum-card">
-    <div class="sum-label">活跃仓位</div>
-    <div class="sum-val" id="sumCount">—</div>
-    <div class="sum-sub">个持仓</div>
-  </div>
-  <div class="sum-card">
-    <div class="sum-label">价格更新</div>
-    <div class="sum-val" id="sumTime" style="font-size:13px">—</div>
-    <div class="sum-sub">最后刷新时间</div>
-  </div>
+ <div class="sum-card">
+ <div class="sum-label">总资产估值</div>
+ <div class="sum-val" id="sumTotal">—</div>
+ <div class="sum-sub">折合人民币（×7.25）</div>
+ </div>
+ <div class="sum-card">
+ <div class="sum-label">总浮盈/亏</div>
+ <div class="sum-val" id="sumPnl">—</div>
+ <div class="sum-sub" id="sumPct">—</div>
+ </div>
+ <div class="sum-card">
+ <div class="sum-label">活跃仓位</div>
+ <div class="sum-val" id="sumCount">—</div>
+ <div class="sum-sub">个持仓</div>
+ </div>
+ <div class="sum-card">
+ <div class="sum-label">价格更新</div>
+ <div class="sum-val" id="sumTime" style="font-size:13px">—</div>
+ <div class="sum-sub">最后刷新时间</div>
+ </div>
 </div>
 
 <!-- ALLOC -->
@@ -200,95 +201,95 @@ td{padding:11px 12px;font-size:13px;vertical-align:top}
 
 <!-- TABS -->
 <div class="tabs">
-  <button class="tab active" onclick="ft('all',this)">全部</button>
-  <button class="tab" onclick="ft('cn',this)">🇨🇳 A股</button>
-  <button class="tab" onclick="ft('us',this)">🇺🇸 美股</button>
-  <button class="tab" onclick="ft('crypto',this)">₿ 加密</button>
+ <button class="tab active" onclick="ft('all',this)">全部</button>
+ <button class="tab" onclick="ft('cn',this)">🇨🇳 A股</button>
+ <button class="tab" onclick="ft('us',this)">🇺🇸 美股</button>
+ <button class="tab" onclick="ft('crypto',this)">₿ 加密</button>
 </div>
 
 <!-- TABLE -->
 <div class="section">
-  <div class="sec-hdr">
-    <div class="sec-title"><div class="sec-dot" style="background:var(--blue)"></div>持仓明细</div>
-    <div style="font-size:10px;color:var(--dim);font-family:'JetBrains Mono',monospace">
-      <span style="display:inline-flex;align-items:center;gap:4px"><span class="ldot"></span>实时</span>
-      &nbsp;&nbsp;
-      <span style="display:inline-flex;align-items:center;gap:4px"><span class="mdot"></span>手动</span>
-    </div>
-  </div>
-  <div class="tbl-wrap">
-    <table>
-      <thead><tr>
-        <th>资产</th><th>市场</th><th>数量</th><th>成本价</th>
-        <th>实时价格</th><th>市值</th><th>浮盈亏</th><th>信号</th><th>操作</th>
-      </tr></thead>
-      <tbody id="tbody"><tr><td colspan="9" class="empty">加载中...</td></tr></tbody>
-    </table>
-  </div>
+ <div class="sec-hdr">
+ <div class="sec-title"><div class="sec-dot" style="background:var(--blue)"></div>持仓明细</div>
+ <div style="font-size:10px;color:var(--dim);font-family:'JetBrains Mono',monospace">
+ <span style="display:inline-flex;align-items:center;gap:4px"><span class="ldot"></span>实时</span>
+ &nbsp;&nbsp;
+ <span style="display:inline-flex;align-items:center;gap:4px"><span class="mdot"></span>手动</span>
+ </div>
+ </div>
+ <div class="tbl-wrap">
+ <table>
+ <thead><tr>
+ <th>资产</th><th>市场</th><th>数量</th><th>成本价</th>
+ <th>实时价格</th><th>市值</th><th>浮盈亏</th><th>信号</th><th>操作</th>
+ </tr></thead>
+ <tbody id="tbody"><tr><td colspan="9" class="empty">加载中...</td></tr></tbody>
+ </table>
+ </div>
 </div>
 
 <!-- ADD -->
 <div class="add-section">
-  <div class="add-hdr" onclick="toggleAdd()">
-    <div class="add-hdr-title">➕ 新增 / 更新持仓</div>
-    <div class="add-toggle" id="addToggle">+</div>
-  </div>
-  <div class="add-body" id="addBody">
-    <div class="form-row">
-      <div class="fld"><label>资产名称</label><input id="fn" placeholder="如：中国平安"/></div>
-      <div class="fld"><label>代码</label><input id="fc" placeholder="如：BTC / TSLA / 601318"/></div>
-      <div class="fld"><label>市场</label>
-        <select id="fm"><option value="cn">🇨🇳 A股/港股</option><option value="us">🇺🇸 美股</option><option value="crypto">₿ 加密</option></select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="fld"><label>数量/份额</label><input id="fq" type="number" step="0.0001"/></div>
-      <div class="fld"><label>成本价</label><input id="fco" type="number" step="0.0001"/></div>
-      <div class="fld"><label>当前价（留空自动）</label><input id="fp" type="number" step="0.0001"/></div>
-    </div>
-    <div class="form-row">
-      <div class="fld"><label>货币</label><select id="fcu"><option value="CNY">CNY</option><option value="USD">USD</option></select></div>
-      <div class="fld"><label>信号</label>
-        <select id="fs"><option value="hold">持有观望</option><option value="buy">可加仓</option><option value="sell">考虑减仓</option><option value="watch">重点监控</option></select>
-      </div>
-      <div class="fld"><label>止损价</label><input id="fst" type="number" step="0.0001"/></div>
-    </div>
-    <div class="fld" style="margin-bottom:12px"><label>备注</label><input id="fno" placeholder="如：长线囤币，止损67000"/></div>
-    <button class="btn-add" onclick="addH()">保存持仓</button>
-  </div>
+ <div class="add-hdr" onclick="toggleAdd()">
+ <div class="add-hdr-title">➕ 新增 / 更新持仓</div>
+ <div class="add-toggle" id="addToggle">+</div>
+ </div>
+ <div class="add-body" id="addBody">
+ <div class="form-row">
+ <div class="fld"><label>资产名称</label><input id="fn" placeholder="如：中国平安"/></div>
+ <div class="fld"><label>代码</label><input id="fc" placeholder="如：BTC / TSLA / 601318"/></div>
+ <div class="fld"><label>市场</label>
+ <select id="fm"><option value="cn">🇨🇳 A股/港股</option><option value="us">🇺🇸 美股</option><option value="crypto">₿ 加密</option></select>
+ </div>
+ </div>
+ <div class="form-row">
+ <div class="fld"><label>数量/份额</label><input id="fq" type="number" step="0.0001"/></div>
+ <div class="fld"><label>成本价</label><input id="fco" type="number" step="0.0001"/></div>
+ <div class="fld"><label>当前价（留空自动）</label><input id="fp" type="number" step="0.0001"/></div>
+ </div>
+ <div class="form-row">
+ <div class="fld"><label>货币</label><select id="fcu"><option value="CNY">CNY</option><option value="USD">USD</option></select></div>
+ <div class="fld"><label>信号</label>
+ <select id="fs"><option value="hold">持有观望</option><option value="buy">可加仓</option><option value="sell">考虑减仓</option><option value="watch">重点监控</option></select>
+ </div>
+ <div class="fld"><label>止损价</label><input id="fst" type="number" step="0.0001"/></div>
+ </div>
+ <div class="fld" style="margin-bottom:12px"><label>备注</label><input id="fno" placeholder="如：长线囤币，止损67000"/></div>
+ <button class="btn-add" onclick="addH()">保存持仓</button>
+ </div>
 </div>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal">
-  <div class="modal">
-    <div class="modal-title">编辑持仓</div>
-    <div class="form-row">
-      <div class="fld"><label>名称</label><input id="mn"/></div>
-      <div class="fld"><label>代码</label><input id="mc"/></div>
-      <div class="fld"><label>市场</label><select id="mm"><option value="cn">A股</option><option value="us">美股</option><option value="crypto">加密</option></select></div>
-    </div>
-    <div class="form-row">
-      <div class="fld"><label>数量</label><input id="mq" type="number" step="0.0001"/></div>
-      <div class="fld"><label>成本价</label><input id="mco" type="number" step="0.0001"/></div>
-      <div class="fld"><label>当前价格</label><input id="mp" type="number" step="0.0001"/></div>
-    </div>
-    <div class="form-row">
-      <div class="fld"><label>货币</label><select id="mcu"><option value="CNY">CNY</option><option value="USD">USD</option></select></div>
-      <div class="fld"><label>信号</label><select id="ms"><option value="hold">持有观望</option><option value="buy">可加仓</option><option value="sell">考虑减仓</option><option value="watch">重点监控</option></select></div>
-      <div class="fld"><label>止损价</label><input id="mst" type="number" step="0.0001"/></div>
-    </div>
-    <div class="fld"><label>备注</label><input id="mno"/></div>
-    <div class="modal-actions">
-      <button class="modal-btn save" onclick="saveE()">保存</button>
-      <button class="modal-btn del" onclick="delH()">删除</button>
-      <button class="modal-btn cancel" onclick="closeM()">取消</button>
-    </div>
-  </div>
+ <div class="modal">
+ <div class="modal-title">编辑持仓</div>
+ <div class="form-row">
+ <div class="fld"><label>名称</label><input id="mn"/></div>
+ <div class="fld"><label>代码</label><input id="mc"/></div>
+ <div class="fld"><label>市场</label><select id="mm"><option value="cn">A股</option><option value="us">美股</option><option value="crypto">加密</option></select></div>
+ </div>
+ <div class="form-row">
+ <div class="fld"><label>数量</label><input id="mq" type="number" step="0.0001"/></div>
+ <div class="fld"><label>成本价</label><input id="mco" type="number" step="0.0001"/></div>
+ <div class="fld"><label>当前价格</label><input id="mp" type="number" step="0.0001"/></div>
+ </div>
+ <div class="form-row">
+ <div class="fld"><label>货币</label><select id="mcu"><option value="CNY">CNY</option><option value="USD">USD</option></select></div>
+ <div class="fld"><label>信号</label><select id="ms"><option value="hold">持有观望</option><option value="buy">可加仓</option><option value="sell">考虑减仓</option><option value="watch">重点监控</option></select></div>
+ <div class="fld"><label>止损价</label><input id="mst" type="number" step="0.0001"/></div>
+ </div>
+ <div class="fld"><label>备注</label><input id="mno"/></div>
+ <div class="modal-actions">
+ <button class="modal-btn save" onclick="saveE()">保存</button>
+ <button class="modal-btn del" onclick="delH()">删除</button>
+ <button class="modal-btn cancel" onclick="closeM()">取消</button>
+ </div>
+ </div>
 </div>
 
 <div class="disc">
-  💡 加密货币价格来自<b>币安公开API</b>（实时，无需注册）· 美股价格来自<b>Finnhub</b>（免费Key） · A股需手动更新<br>
-  🟢 绿点 = 实时自动更新 &nbsp; 🟡 黄点 = 手动录入价格 &nbsp; 数据存储在本地浏览器，建议定期导出CSV备份
+ 💡 加密货币价格来自<b>币安公开API</b>（实时，无需注册）· 美股价格来自<b>Finnhub</b>（免费Key） · A股需手动更新<br>
+ 🟢 绿点 = 实时自动更新 &nbsp; 🟡 黄点 = 手动录入价格 &nbsp; 数据存储在本地浏览器，建议定期导出CSV备份
 </div>
 </div>
 
@@ -298,31 +299,31 @@ let FINNHUB_KEY=localStorage.getItem('fhk')||'';
 const FX=7.25;
 
 const BMAP={BTC:'BTCUSDT',ETH:'ETHUSDT',SOL:'SOLUSDT',BNB:'BNBUSDT',DOGE:'DOGEUSDT',
-  XRP:'XRPUSDT',ADA:'ADAUSDT',AVAX:'AVAXUSDT',BABY:'BABYUSDT',SXT:'SXTUSDT',BANANA:'BANANAUSDT'};
+ XRP:'XRPUSDT',ADA:'ADAUSDT',AVAX:'AVAXUSDT',BABY:'BABYUSDT',SXT:'SXTUSDT',BANANA:'BANANAUSDT'};
 
 const DEF=[
-  {id:'h1', name:'中国平安',     code:'601318',market:'cn',    qty:100,         cost:58.71,   price:58.71,  cur:'CNY',sig:'hold', stop:52,   note:'稳健金融蓝筹，持仓盈利25%'},
-  {id:'h2', name:'黄金ETF',      code:'518880',market:'cn',    qty:3000,        cost:10.09,   price:10.09,  cur:'CNY',sig:'hold', stop:9.2,  note:'避险配置，长线持有'},
-  {id:'h3', name:'半导体基金',   code:'512480',market:'cn',    qty:18800,       cost:1.614,   price:1.270,  cur:'CNY',sig:'watch',stop:1.20, note:'⚠️浮亏27%，止损1.20，关注1.35能否站稳'},
-  {id:'h4', name:'机器人AI基金', code:'562500',market:'cn',    qty:37100,       cost:1.036,   price:1.159,  cur:'CNY',sig:'hold', stop:0.95, note:'当前浮盈，AI主线强势，继续持有'},
-  {id:'h5', name:'大数据基金',   code:'515330',market:'cn',    qty:45200,       cost:1.014,   price:1.025,  cur:'CNY',sig:'hold', stop:0.92, note:'微亏观望，等待方向'},
-  {id:'h6', name:'芯片基金',     code:'159995',market:'cn',    qty:54100,       cost:0.905,   price:0.880,  cur:'CNY',sig:'buy',  stop:0.82, note:'小幅盈利+2.84%，AI芯片长线看好'},
-  {id:'h7', name:'BTC · RH',     code:'BTC',   market:'crypto',qty:0.17,        cost:86391.2, price:74889,  cur:'USD',sig:'watch',stop:67000,note:'⚠️高位建仓浮亏13.3%，止损$67,000，长线持有'},
-  {id:'h13',name:'BTC · OKX',    code:'BTC',   market:'crypto',qty:0.08981222,  cost:86391.2, price:74889,  cur:'USD',sig:'watch',stop:67000,note:'OKX账户BTC，0.49% APY赚币中'},
-  {id:'h14',name:'SOL · OKX',    code:'SOL',   market:'crypto',qty:3.14051627,  cost:184.86,  price:85.33,  cur:'USD',sig:'watch',stop:60,   note:'⚠️浮亏54.6%，4.9% APY赚币中'},
-  {id:'h15',name:'BABY',         code:'BABY',  market:'crypto',qty:196.18103271,cost:0,       price:0.01459,cur:'USD',sig:'hold', stop:null, note:'小额代币，市值约$2.86'},
-  {id:'h16',name:'BTC · 币安',   code:'BTC',   market:'crypto',qty:0.06114794,  cost:78385.45,price:74889,  cur:'USD',sig:'watch',stop:67000,note:'币安现货BTC，成本$78,385'},
-  {id:'h17',name:'ETH · 币安理财',code:'ETH',  market:'crypto',qty:1.09126201,  cost:2356,    price:2357,   cur:'USD',sig:'hold', stop:1800, note:'币安理财ETH，3.67% APY自动申购中'},
-  {id:'h18',name:'BTC · 币安理财',code:'BTC',  market:'crypto',qty:0.01898667,  cost:78385.45,price:74889,  cur:'USD',sig:'watch',stop:67000,note:'币安理财BTC，赚币中'},
-  {id:'h19',name:'SOL · 币安理财',code:'SOL',  market:'crypto',qty:5.38843229,  cost:184.86,  price:85.33,  cur:'USD',sig:'watch',stop:60,   note:'⚠️币安理财SOL，浮亏约54%，赚币摊低成本'},
-  {id:'h20',name:'USDC',         code:'USDC',  market:'crypto',qty:0.91548122,  cost:1,       price:1,      cur:'USD',sig:'hold', stop:null, note:'稳定币'},
-  {id:'h21',name:'SXT',          code:'SXT',   market:'crypto',qty:16.46768169, cost:0,       price:0.01665,cur:'USD',sig:'hold', stop:null, note:'小额代币'},
-  {id:'h22',name:'BANANA',       code:'BANANA',market:'crypto',qty:0.02588654,  cost:0,       price:3.704,  cur:'USD',sig:'hold', stop:null, note:'小额代币'},
-  {id:'h12',name:'TSLA',         code:'TSLA',  market:'us',    qty:0.28279,     cost:421.36,  price:395.53, cur:'USD',sig:'hold', stop:340,  note:'Robinhood持仓，小仓位微亏'},
-  {id:'h8', name:'QQQ',          code:'QQQ',   market:'us',    qty:0,           cost:0,       price:476,    cur:'USD',sig:'buy',  stop:420,  note:'计划买入$4500，压舱石'},
-  {id:'h9', name:'SMH',          code:'SMH',   market:'us',    qty:0,           cost:0,       price:210,    cur:'USD',sig:'buy',  stop:185,  note:'计划买入$3500，AI算力'},
-  {id:'h10',name:'MSFT',         code:'MSFT',  market:'us',    qty:0,           cost:0,       price:415,    cur:'USD',sig:'buy',  stop:370,  note:'计划买入$2500，蓝筹科技'},
-  {id:'h11',name:'NVDA',         code:'NVDA',  market:'us',    qty:0,           cost:0,       price:900,    cur:'USD',sig:'buy',  stop:780,  note:'计划买入$2500，等回调5%'},
+ {id:'h1', name:'中国平安', code:'601318',market:'cn', qty:100, cost:46.881, price:57.92, cur:'CNY',sig:'hold', stop:42, note:'金融蓝筹浮盈23.5%，稳健持有'},
+ {id:'h2', name:'黄金ETF', code:'518880',market:'cn', qty:3000, cost:7.825, price:10.029, cur:'CNY',sig:'hold', stop:7.0, note:'避险配置浮盈28.2%，长线持有'},
+ {id:'h3', name:'半导体基金', code:'512480',market:'cn', qty:18800, cost:1.270, price:1.628, cur:'CNY',sig:'hold', stop:1.10, note:'浮盈28.2%，AI芯片主线强势'},
+ {id:'h4', name:'机器人AI基金', code:'562500',market:'cn', qty:37100, cost:1.159, price:1.044, cur:'CNY',sig:'watch',stop:0.95, note:'⚠️浮亏9.9%，关注0.95支撑'},
+ {id:'h5', name:'大数据基金', code:'515330',market:'cn', qty:45200, cost:1.025, price:1.009, cur:'CNY',sig:'hold', stop:0.92, note:'微亏1.6%，观望等待方向'},
+ {id:'h6', name:'芯片基金', code:'159995',market:'cn', qty:54100, cost:0.880, price:0.916, cur:'CNY',sig:'hold', stop:0.80, note:'浮盈4.1%，AI芯片长线看好'},
+ {id:'h7', name:'BTC · RH', code:'BTC', market:'crypto',qty:0.17, cost:86391.2, price:74889, cur:'USD',sig:'watch',stop:67000,note:'⚠️高位建仓浮亏13.3%，止损$67,000，长线持有'},
+ {id:'h13',name:'BTC · OKX', code:'BTC', market:'crypto',qty:0.08981222, cost:86391.2, price:74889, cur:'USD',sig:'watch',stop:67000,note:'OKX账户BTC，0.49% APY赚币中'},
+ {id:'h14',name:'SOL · OKX', code:'SOL', market:'crypto',qty:3.14051627, cost:184.86, price:85.33, cur:'USD',sig:'watch',stop:60, note:'⚠️浮亏54.6%，4.9% APY赚币中'},
+ {id:'h15',name:'BABY', code:'BABY', market:'crypto',qty:196.18103271,cost:0, price:0.01459,cur:'USD',sig:'hold', stop:null, note:'小额代币，市值约$2.86'},
+ {id:'h16',name:'BTC · 币安', code:'BTC', market:'crypto',qty:0.06114794, cost:78385.45,price:74889, cur:'USD',sig:'watch',stop:67000,note:'币安现货BTC，成本$78,385'},
+ {id:'h17',name:'ETH · 币安理财',code:'ETH', market:'crypto',qty:1.09126201, cost:2356, price:2357, cur:'USD',sig:'hold', stop:1800, note:'币安理财ETH，3.67% APY自动申购中'},
+ {id:'h18',name:'BTC · 币安理财',code:'BTC', market:'crypto',qty:0.01898667, cost:78385.45,price:74889, cur:'USD',sig:'watch',stop:67000,note:'币安理财BTC，赚币中'},
+ {id:'h19',name:'SOL · 币安理财',code:'SOL', market:'crypto',qty:5.38843229, cost:184.86, price:85.33, cur:'USD',sig:'watch',stop:60, note:'⚠️币安理财SOL，浮亏约54%，赚币摊低成本'},
+ {id:'h20',name:'USDC', code:'USDC', market:'crypto',qty:0.91548122, cost:1, price:1, cur:'USD',sig:'hold', stop:null, note:'稳定币'},
+ {id:'h21',name:'SXT', code:'SXT', market:'crypto',qty:16.46768169, cost:0, price:0.01665,cur:'USD',sig:'hold', stop:null, note:'小额代币'},
+ {id:'h22',name:'BANANA', code:'BANANA',market:'crypto',qty:0.02588654, cost:0, price:3.704, cur:'USD',sig:'hold', stop:null, note:'小额代币'},
+ {id:'h12',name:'TSLA', code:'TSLA', market:'us', qty:0.28279, cost:421.36, price:395.53, cur:'USD',sig:'hold', stop:340, note:'Robinhood持仓，小仓位微亏'},
+ {id:'h8', name:'QQQ', code:'QQQ', market:'us', qty:0, cost:0, price:476, cur:'USD',sig:'buy', stop:420, note:'计划买入$4500，压舱石'},
+ {id:'h9', name:'SMH', code:'SMH', market:'us', qty:0, cost:0, price:210, cur:'USD',sig:'buy', stop:185, note:'计划买入$3500，AI算力'},
+ {id:'h10',name:'MSFT', code:'MSFT', market:'us', qty:0, cost:0, price:415, cur:'USD',sig:'buy', stop:370, note:'计划买入$2500，蓝筹科技'},
+ {id:'h11',name:'NVDA', code:'NVDA', market:'us', qty:0, cost:0, price:900, cur:'USD',sig:'buy', stop:780, note:'计划买入$2500，等回调5%'},
 ].map(h=>({...h,updatedAt:0}));
 
 function load(){try{const r=localStorage.getItem(SK);if(r)return JSON.parse(r);}catch(e){}save(DEF);return DEF;}
@@ -341,147 +342,144 @@ const uid=()=>'h'+Date.now()+Math.random().toString(36).slice(2,5);
 
 // FETCH BINANCE
 async function fetchBinance(){
-  for(const u of['https://api.binance.com/api/v3/ticker/price','https://api.binance.us/api/v3/ticker/price']){
-    try{const r=await fetch(u);if(!r.ok)continue;const d=await r.json();const m={};d.forEach(t=>{m[t.symbol]=parseFloat(t.price);});return m;}catch(e){}
-  }return null;
+ for(const u of['https://api.binance.com/api/v3/ticker/price','https://api.binance.us/api/v3/ticker/price']){
+ try{const r=await fetch(u);if(!r.ok)continue;const d=await r.json();const m={};d.forEach(t=>{m[t.symbol]=parseFloat(t.price);});return m;}catch(e){}
+ }return null;
 }
 
 // FETCH FINNHUB
 async function fetchFH(sym){
-  if(!FINNHUB_KEY)return null;
-  try{const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=${sym}&token=${FINNHUB_KEY}`);const d=await r.json();return d.c>0?d.c:null;}catch{return null;}
+ if(!FINNHUB_KEY)return null;
+ try{const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=${sym}&token=${FINNHUB_KEY}`);const d=await r.json();return d.c>0?d.c:null;}catch{return null;}
 }
 
 // AUTO UPDATE
 async function autoUpdatePrices(){
-  if(updating)return; updating=true;
-  const btn=document.getElementById('btnRefresh');
-  const st=document.getElementById('refreshStatus');
-  btn.textContent='⏳ 更新中...'; btn.disabled=true;
-  st.textContent='⏳ 正在获取实时价格...'; st.style.color='var(--dim)';
+ if(updating)return; updating=true;
+ const btn=document.getElementById('btnRefresh');
+ const st=document.getElementById('refreshStatus');
+ btn.textContent='⏳ 更新中...'; btn.disabled=true;
+ st.textContent='⏳ 正在获取实时价格...'; st.style.color='var(--dim)';
 
-  let cn=0,us=0;
+ let cn=0,us=0;
 
-  // 加密 — 币安
-  const bm=await fetchBinance();
-  holdings.forEach(h=>{
-    if(h.code==='USDC'||h.code==='USDT'){h.price=1;h.updatedAt=Date.now();cn++;return;}
-    if(h.market==='crypto'&&bm){const s=BMAP[h.code];if(s&&bm[s]){h.price=bm[s];h.updatedAt=Date.now();cn++;}}
-  });
+ // 加密 — 币安
+ const bm=await fetchBinance();
+ holdings.forEach(h=>{
+ if(h.code==='USDC'||h.code==='USDT'){h.price=1;h.updatedAt=Date.now();cn++;return;}
+ if(h.market==='crypto'&&bm){const s=BMAP[h.code];if(s&&bm[s]){h.price=bm[s];h.updatedAt=Date.now();cn++;}}
+ });
 
-  // 美股 — Finnhub
-  if(FINNHUB_KEY){
-    const codes=[...new Set(holdings.filter(h=>h.market==='us').map(h=>h.code))];
-    for(const code of codes){
-      const p=await fetchFH(code);
-      if(p){holdings.filter(h=>h.code===code&&h.market==='us').forEach(h=>{h.price=p;h.updatedAt=Date.now();});us++;}
-      await new Promise(r=>setTimeout(r,150));
-    }
-  }
-
-  save(holdings); render(); renderTape();
-  const now=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  let msg=`✅ 加密${cn}个已更新`;
-  if(FINNHUB_KEY) msg+=`，美股${us}个已更新`;
-  else msg+=' · 输入Finnhub Key可自动更新美股';
-  msg+=` · ${now}`;
-  st.textContent=msg; st.style.color='var(--green)';
-  btn.textContent='🔄 立即刷新'; btn.disabled=false;
-  updating=false;
+ // 美股 — Finnhub
+ if(FINNHUB_KEY){
+ const codes=[...new Set(holdings.filter(h=>h.market==='us').map(h=>h.code))];
+ for(const code of codes){
+ const p=await fetchFH(code);
+ if(p){holdings.filter(h=>h.code===code&&h.market==='us').forEach(h=>{h.price=p;h.updatedAt=Date.now();});us++;}
+ await new Promise(r=>setTimeout(r,150));
+ }
+ }save(holdings); render(); renderTape();
+ const now=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+ let msg=`✅ 加密${cn}个已更新`;
+ if(FINNHUB_KEY) msg+=`，美股${us}个已更新`;
+ else msg+=' · 输入Finnhub Key可自动更新美股';
+ msg+=` · ${now}`;
+ st.textContent=msg; st.style.color='var(--green)';
+ btn.textContent='🔄 立即刷新'; btn.disabled=false;
+ updating=false;
 }
 
 // TICKER TAPE
 function renderTape(){
-  const items=holdings.filter(h=>h.qty>0&&h.price>0);
-  if(!items.length)return;
-  const html=items.map(h=>{
-    const p=pp(h.cost,h.price);
-    const sign=p>=0?'+':'';
-    const cls=p>=0?'tp':'tn';
-    const price=h.cur==='USD'?`$${f(h.price,h.price<1?6:h.price<10?4:2)}`:`¥${f(h.price,h.price<10?4:2)}`;
-    const pstr=p!==null?` <span class="${cls}">${sign}${f(p,2)}%</span>`:'';
-    return `<span class="ti"><b>${h.code}</b> ${price}${pstr}</span>`;
-  }).join('');
-  document.getElementById('tapeInner').innerHTML=html+html;
+ const items=holdings.filter(h=>h.qty>0&&h.price>0);
+ if(!items.length)return;
+ const html=items.map(h=>{
+ const p=pp(h.cost,h.price);
+ const sign=p>=0?'+':'';
+ const cls=p>=0?'tp':'tn';
+ const price=h.cur==='USD'?`$${f(h.price,h.price<1?6:h.price<10?4:2)}`:`¥${f(h.price,h.price<10?4:2)}`;
+ const pstr=p!==null? ` <span class="${cls}">${sign}${f(p,2)}%</span>`:'';
+ return `<span class="ti"><b>${h.code}</b> ${price}${pstr}</span>`;
+ }).join('');
+ document.getElementById('tapeInner').innerHTML=html+html;
 }
 
 // RENDER ALL
 function render(){renderDate();renderSummary();renderAlloc();renderAlerts();renderTable();}
 
 function renderDate(){
-  const n=new Date();
-  document.getElementById('dateDisplay').innerHTML=
-    `<div>${n.toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'})}</div>
-     <div style="margin-top:3px">${n.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</div>`;
+ const n=new Date();
+ document.getElementById('dateDisplay').innerHTML=
+ `<div>${n.toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'})}</div>
+ <div style="margin-top:3px">${n.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</div>`;
 }
 
 function renderSummary(){
-  let total=0,cost=0,active=0;
-  holdings.forEach(h=>{
-    if(!h.qty)return; active++;
-    const mul=h.cur==='USD'?FX:1;
-    total+=h.qty*h.price*mul; cost+=h.qty*(h.cost||0)*mul;
-  });
-  const pnl=total-cost, pct=cost?pnl/cost*100:0;
-  document.getElementById('sumTotal').textContent='¥'+f(total,0);
-  const pe=document.getElementById('sumPnl');
-  pe.textContent=(pnl>=0?'+':'')+'¥'+f(Math.abs(pnl),0);
-  pe.className='sum-val '+(pnl>=0?'pos':'neg');
-  document.getElementById('sumPct').textContent=(pct>=0?'+':'')+f(pct)+'%';
-  document.getElementById('sumCount').textContent=active;
-  const last=holdings.reduce((a,b)=>Math.max(a,b.updatedAt||0),0);
-  document.getElementById('sumTime').textContent=last?new Date(last).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):'—';
+ let total=0,cost=0,active=0;
+ holdings.forEach(h=>{
+ if(!h.qty)return; active++;
+ const mul=h.cur==='USD'?FX:1;
+ total+=h.qty*h.price*mul; cost+=h.qty*(h.cost||0)*mul;
+ });
+ const pnl=total-cost, pct=cost?pnl/cost*100:0;
+ document.getElementById('sumTotal').textContent='¥'+f(total,0);
+ const pe=document.getElementById('sumPnl');
+ pe.textContent=(pnl>=0?'+':'')+'¥'+f(Math.abs(pnl),0);
+ pe.className='sum-val '+(pnl>=0?'pos':'neg');
+ document.getElementById('sumPct').textContent=(pct>=0?'+':'')+f(pct)+'%';
+ document.getElementById('sumCount').textContent=active;
+ const last=holdings.reduce((a,b)=>Math.max(a,b.updatedAt||0),0);
+ document.getElementById('sumTime').textContent=last?new Date(last).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):'—';
 }
 
 function renderAlloc(){
-  const g={cn:{l:'A股',c:'#f5a623',v:0},us:{l:'美股',c:'#3d8eff',v:0},crypto:{l:'加密',c:'#ffd060',v:0}};
-  let t=0;
-  holdings.forEach(h=>{if(!h.qty)return;const v=h.qty*h.price*(h.cur==='USD'?FX:1);g[h.market].v+=v;t+=v;});
-  const bar=document.getElementById('allocBar'),leg=document.getElementById('allocLegend');
-  bar.innerHTML='';leg.innerHTML='';
-  Object.values(g).forEach(({l,c,v})=>{
-    const p=t?v/t*100:0; if(p<0.5)return;
-    bar.innerHTML+=`<div class="alloc-seg" style="width:${p}%;background:${c}"></div>`;
-    leg.innerHTML+=`<div class="leg-item"><div class="leg-dot" style="background:${c}"></div>${l} ${f(p,1)}%</div>`;
-  });
+ const g={cn:{l:'A股',c:'#f5a623',v:0},us:{l:'美股',c:'#3d8eff',v:0},crypto:{l:'加密',c:'#ffd060',v:0}};
+ let t=0;
+ holdings.forEach(h=>{if(!h.qty)return;const v=h.qty*h.price*(h.cur==='USD'?FX:1);g[h.market].v+=v;t+=v;});
+ const bar=document.getElementById('allocBar'),leg=document.getElementById('allocLegend');
+ bar.innerHTML='';leg.innerHTML='';
+ Object.values(g).forEach(({l,c,v})=>{
+ const p=t?v/t*100:0; if(p<0.5)return;
+ bar.innerHTML+=`<div class="alloc-seg" style="width:${p}%;background:${c}"></div>`;
+ leg.innerHTML+=`<div class="leg-item"><div class="leg-dot" style="background:${c}"></div>${l} ${f(p,1)}%</div>`;
+ });
 }
 
 function renderAlerts(){
-  const alerts=[];
-  holdings.forEach(h=>{
-    if(!h.qty)return;
-    if(h.stop&&h.price<=h.stop*1.05) alerts.push(`⚠️ <b>${h.name}</b> 现价${h.cur==='USD'?'$':'¥'}${f(h.price)} 接近止损线 ${h.cur==='USD'?'$':'¥'}${h.stop}！`);
-    const p=pp(h.cost,h.price);
-    if(p!==null&&p<=-20) alerts.push(`🔴 <b>${h.name}</b> 浮亏 ${f(p,1)}%，请重新评估持仓逻辑`);
-  });
-  document.getElementById('alertArea').innerHTML=alerts.map(a=>`<div class="alert alert-warn">${a}</div>`).join('');
+ const alerts=[];
+ holdings.forEach(h=>{
+ if(!h.qty)return;
+ if(h.stop&&h.price<=h.stop*1.05) alerts.push(`⚠️ <b>${h.name}</b> 现价${h.cur==='USD'?'$':'¥'}${f(h.price)} 接近止损线 ${h.cur==='USD'?'$':'¥'}${h.stop}！`);
+ const p=pp(h.cost,h.price);
+ if(p!==null&&p<=-20) alerts.push(`🔴 <b>${h.name}</b> 浮亏 ${f(p,1)}%，请重新评估持仓逻辑`);
+ });
+ document.getElementById('alertArea').innerHTML=alerts.map(a=>`<div class="alert alert-warn">${a}</div>`).join('');
 }
 
 function renderTable(){
-  const list=filter==='all'?holdings:holdings.filter(h=>h.market===filter);
-  const tb=document.getElementById('tbody');
-  if(!list.length){tb.innerHTML='<tr><td colspan="9" class="empty">暂无持仓</td></tr>';return;}
-  const SIG={hold:'<span class="signal sig-hold">持有</span>',buy:'<span class="signal sig-buy">加仓</span>',sell:'<span class="signal sig-sell">减仓</span>',watch:'<span class="signal sig-watch">监控</span>'};
-  tb.innerHTML=list.map(h=>{
-    const z=!h.qty;
-    const mv=h.qty*h.price, pnlV=mv-h.qty*(h.cost||0), pnlP=pp(h.cost,h.price);
-    const pc=pnlV>=0?'pos':'neg', ps=pnlV>=0?'+':'';
-    const badge=h.market==='cn'?'<span class="badge badge-cn">A股</span>':h.market==='us'?'<span class="badge badge-us">美股</span>':'<span class="badge badge-crypto">加密</span>';
-    const fresh=h.updatedAt&&(Date.now()-h.updatedAt)<180000&&h.market!=='cn';
-    const dot=fresh?'<span class="ldot" title="实时价格"></span>':'<span class="mdot" title="手动价格"></span>';
-    const priceStr=(h.cur==='USD'?'$':'¥')+f(h.price,h.price<1?6:h.price<10?4:2);
-    return `<tr ${z?'style="opacity:.4"':''}>
-      <td><div class="an">${h.name}</div><div class="ac">${h.code}${h.stop?' · 止损 '+(h.cur==='USD'?'$':'¥')+h.stop:''}</div>${h.note?`<div class="anote" title="${h.note}">${h.note}</div>`:''}</td>
-      <td>${badge}</td>
-      <td class="mono">${z?'<span style="color:var(--dim)">计划</span>':f(h.qty,h.qty<10?4:0)}</td>
-      <td class="mono">${h.cost?(h.cur==='USD'?'$':'¥')+f(h.cost,h.cost<10?4:2):'—'}</td>
-      <td><div class="price-cell">${dot}<span class="mono">${priceStr}</span></div></td>
-      <td class="mono">${z?'—':fc(mv,h.cur)}</td>
-      <td class="mono ${z?'':pc}">${z?'—':`${ps}${fc(pnlV,h.cur)}<br><span style="font-size:10px">${ps}${f(pnlP,2)}%</span>`}</td>
-      <td>${SIG[h.sig]||''}</td>
-      <td><button class="act-btn" onclick="openE('${h.id}')">编辑</button></td>
-    </tr>`;
-  }).join('');
+ const list=filter==='all'?holdings:holdings.filter(h=>h.market===filter);
+ const tb=document.getElementById('tbody');
+ if(!list.length){tb.innerHTML='<tr><td colspan="9" class="empty">暂无持仓</td></tr>';return;}
+ const SIG={hold:'<span class="signal sig-hold">持有</span>',buy:'<span class="signal sig-buy">加仓</span>',sell:'<span class="signal sig-sell">减仓</span>',watch:'<span class="signal sig-watch">监控</span>'};tb.innerHTML=list.map(h=>{
+ const z=!h.qty;
+ const mv=h.qty*h.price, pnlV=mv-h.qty*(h.cost||0), pnlP=pp(h.cost,h.price);
+ const pc=pnlV>=0?'pos':'neg', ps=pnlV>=0?'+':'';
+ const badge=h.market==='cn'?'<span class="badge badge-cn">A股</span>':h.market==='us'?'<span class="badge badge-us">美股</span>':'<span class="badge badge-crypto">加密</span>';
+ const fresh=h.updatedAt&&(Date.now()-h.updatedAt)<180000&&h.market!=='cn';
+ const dot=fresh?'<span class="ldot" title="实时价格"></span>':'<span class="mdot" title="手动价格"></span>';
+ const priceStr=(h.cur==='USD'?'$':'¥')+f(h.price,h.price<1?6:h.price<10?4:2);
+ return `<tr ${z?'style="opacity:.4"':''}>
+ <td><div class="an">${h.name}</div><div class="ac">${h.code}${h.stop?' · 止损 '+(h.cur==='USD'?'$':'¥')+h.stop:''}</div>${h.note?`<div class="anote" title="${h.note}">${h.note}</div>`:''}</td>
+ <td>${badge}</td>
+ <td class="mono">${z?'<span style="color:var(--dim)">计划</span>':f(h.qty,h.qty<10?4:0)}</td>
+ <td class="mono">${h.cost?(h.cur==='USD'?'$':'¥')+f(h.cost,h.cost<10?4:2):'—'}</td>
+ <td><div class="price-cell">${dot}<span class="mono">${priceStr}</span></div></td>
+ <td class="mono">${z?'—':fc(mv,h.cur)}</td>
+ <td class="mono ${z?'':pc}">${z?'—':`${ps}${fc(pnlV,h.cur)}<br><span style="font-size:10px">${ps}${f(pnlP,2)}%</span>`}</td>
+ <td>${SIG[h.sig]||''}</td>
+ <td><button class="act-btn" onclick="openE('${h.id}')">编辑</button></td>
+ </tr>`;
+ }).join('');
 }
 
 // FILTER
@@ -490,54 +488,53 @@ function ft(f,btn){filter=f;document.querySelectorAll('.tab').forEach(b=>b.class
 // ADD
 function toggleAdd(){const b=document.getElementById('addBody'),t=document.getElementById('addToggle');const o=b.classList.toggle('open');t.classList.toggle('open',o);}
 function addH(){
-  const name=document.getElementById('fn').value.trim();
-  if(!name){alert('请填写资产名称');return;}
-  const h={id:uid(),name,code:document.getElementById('fc').value.trim(),market:document.getElementById('fm').value,
-    qty:parseFloat(document.getElementById('fq').value)||0,cost:parseFloat(document.getElementById('fco').value)||0,
-    price:parseFloat(document.getElementById('fp').value)||0,cur:document.getElementById('fcu').value,
-    sig:document.getElementById('fs').value,stop:parseFloat(document.getElementById('fst').value)||null,
-    note:document.getElementById('fno').value.trim(),updatedAt:0};
-  holdings.push(h);save(holdings);render();
-  ['fn','fc','fq','fco','fp','fst','fno'].forEach(i=>document.getElementById(i).value='');
-  setTimeout(autoUpdatePrices,300);
+ const name=document.getElementById('fn').value.trim();
+ if(!name){alert('请填写资产名称');return;}
+ const h={id:uid(),name,code:document.getElementById('fc').value.trim(),market:document.getElementById('fm').value,
+ qty:parseFloat(document.getElementById('fq').value)||0,cost:parseFloat(document.getElementById('fco').value)||0,
+ price:parseFloat(document.getElementById('fp').value)||0,cur:document.getElementById('fcu').value,
+ sig:document.getElementById('fs').value,stop:parseFloat(document.getElementById('fst').value)||null,
+ note:document.getElementById('fno').value.trim(),updatedAt:0};
+ holdings.push(h);save(holdings);render();
+ ['fn','fc','fq','fco','fp','fst','fno'].forEach(i=>document.getElementById(i).value='');
+ setTimeout(autoUpdatePrices,300);
 }
 
 // EDIT
 function openE(id){
-  const h=holdings.find(x=>x.id===id);if(!h)return; eid=id;
-  document.getElementById('mn').value=h.name;document.getElementById('mc').value=h.code||'';
-  document.getElementById('mm').value=h.market;document.getElementById('mq').value=h.qty;
-  document.getElementById('mco').value=h.cost;document.getElementById('mp').value=h.price;
-  document.getElementById('mcu').value=h.cur;document.getElementById('ms').value=h.sig;
-  document.getElementById('mst').value=h.stop||'';document.getElementById('mno').value=h.note||'';
-  document.getElementById('modal').classList.add('open');
+ const h=holdings.find(x=>x.id===id);if(!h)return; eid=id;
+ document.getElementById('mn').value=h.name;document.getElementById('mc').value=h.code||'';
+ document.getElementById('mm').value=h.market;document.getElementById('mq').value=h.qty;
+ document.getElementById('mco').value=h.cost;document.getElementById('mp').value=h.price;
+ document.getElementById('mcu').value=h.cur;document.getElementById('ms').value=h.sig;
+ document.getElementById('mst').value=h.stop||'';document.getElementById('mno').value=h.note||'';
+ document.getElementById('modal').classList.add('open');
 }
 function closeM(){document.getElementById('modal').classList.remove('open');eid=null;}
 function saveE(){
-  const h=holdings.find(x=>x.id===eid);if(!h)return;
-  h.name=document.getElementById('mn').value.trim();h.code=document.getElementById('mc').value.trim();
-  h.market=document.getElementById('mm').value;h.qty=parseFloat(document.getElementById('mq').value)||0;
-  h.cost=parseFloat(document.getElementById('mco').value)||0;h.price=parseFloat(document.getElementById('mp').value)||0;
-  h.cur=document.getElementById('mcu').value;h.sig=document.getElementById('ms').value;
-  h.stop=parseFloat(document.getElementById('mst').value)||null;h.note=document.getElementById('mno').value.trim();
-  h.updatedAt=Date.now();save(holdings);closeM();render();
+ const h=holdings.find(x=>x.id===eid);if(!h)return;
+ h.name=document.getElementById('mn').value.trim();h.code=document.getElementById('mc').value.trim();
+ h.market=document.getElementById('mm').value;h.qty=parseFloat(document.getElementById('mq').value)||0;
+ h.cost=parseFloat(document.getElementById('mco').value)||0;h.price=parseFloat(document.getElementById('mp').value)||0;
+ h.cur=document.getElementById('mcu').value;h.sig=document.getElementById('ms').value;h.stop=parseFloat(document.getElementById('mst').value)||null;h.note=document.getElementById('mno').value.trim();
+ h.updatedAt=Date.now();save(holdings);closeM();render();
 }
 function delH(){if(!confirm('确定删除？'))return;holdings=holdings.filter(x=>x.id!==eid);save(holdings);closeM();render();}
 
 // EXPORT
 function exportCSV(){
-  const rows=[['资产名称','代码','市场','数量','成本价','现价','市值','浮盈亏','盈亏%','货币','信号','止损','备注']];
-  holdings.forEach(h=>{const mv=h.qty*h.price,pnl=mv-h.qty*(h.cost||0),pct=h.cost?((h.price-h.cost)/h.cost*100).toFixed(2):'';
-    rows.push([h.name,h.code,h.market,h.qty,h.cost,h.price,mv.toFixed(4),pnl.toFixed(4),pct,h.cur,h.sig,h.stop||'',h.note||'']);});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n')],{type:'text/csv;charset=utf-8'}));
-  a.download=`portfolio_${new Date().toISOString().slice(0,10)}.csv`;a.click();
+ const rows=[['资产名称','代码','市场','数量','成本价','现价','市值','浮盈亏','盈亏%','货币','信号','止损','备注']];
+ holdings.forEach(h=>{const mv=h.qty*h.price,pnl=mv-h.qty*(h.cost||0),pct=h.cost?((h.price-h.cost)/h.cost*100).toFixed(2):'';
+ rows.push([h.name,h.code,h.market,h.qty,h.cost,h.price,mv.toFixed(4),pnl.toFixed(4),pct,h.cur,h.sig,h.stop||'',h.note||'']);});
+ const a=document.createElement('a');
+ a.href=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n')],{type:'text/csv;charset=utf-8'}));
+ a.download=`portfolio_${new Date().toISOString().slice(0,10)}.csv`;a.click();
 }
 
 // AUTO TOGGLE
 document.getElementById('autoToggle').addEventListener('change',function(){
-  if(this.checked){autoUpdatePrices();autoT=setInterval(autoUpdatePrices,60000);}
-  else{clearInterval(autoT);document.getElementById('refreshStatus').textContent='⏸ 自动刷新已暂停';document.getElementById('refreshStatus').style.color='var(--dim)';}
+ if(this.checked){autoUpdatePrices();autoT=setInterval(autoUpdatePrices,60000);}
+ else{clearInterval(autoT);document.getElementById('refreshStatus').textContent='⏸ 自动刷新已暂停';document.getElementById('refreshStatus').style.color='var(--dim)';}
 });
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeM();});
 
