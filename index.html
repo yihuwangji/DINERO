@@ -589,7 +589,7 @@ setInterval(renderDate,30000);
     if(!confirm('确定删除这条分析记录？'))return;
     const list=loadAns();list.splice(idx,1);saveAns(list);renderAnsList();
  };
- renderAnsList();
+ setTimeout(renderAnsList, 0);
 </script>
 <style>
 .an-section{background:#0d1422;border:1px solid #1e2d45;border-radius:12px;padding:20px 24px;margin:18px auto;max-width:900px;}
