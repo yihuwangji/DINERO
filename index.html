@@ -561,6 +561,62 @@ document.getElementById('modal').addEventListener('click',function(e){if(e.targe
 render();renderTape();
 setTimeout(autoUpdatePrices,800);
 setInterval(renderDate,30000);
+
+ // ===== ANALYSIS MODULE =====
+ const AK='investment_analysis_v1';
+ function loadAns(){try{const r=localStorage.getItem(AK);if(r)return JSON.parse(r);}catch(e){}return[];}
+ function saveAns(list){localStorage.setItem(AK,JSON.stringify(list));}
+ function escH(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+ function renderAnsList(){
+    const list=loadAns();const el=document.getElementById('analysisList');
+    if(!el)return;
+    if(!list.length){el.innerHTML='<div class="an-empty">暂无分析记录，写下您的第一条分析吧！</div>';return;}
+    const items=list.map((item,i)=>({...item,origIdx:i})).reverse();
+    el.innerHTML=items.map(item=>`<div class="an-item"><div class="an-meta"><span class="an-date">🗓 ${item.date}</span><button class="an-del" onclick="deleteAn(${item.origIdx})" title="删除">✕</button></div><div class="an-content">${escH(item.content)}</div></div>`).join('');
+ }
+ window.saveAn=function(){
+    const input=document.getElementById('analysisInput');
+    const content=input?input.value.trim():'';
+    if(!content){alert('请先输入分析内容');return;}
+    const now=new Date();
+    const dateStr=now.toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    const list=loadAns();list.push({date:dateStr,content,savedAt:Date.now()});saveAns(list);
+    input.value='';renderAnsList();
+    const btn=document.querySelector('.an-save-btn');if(!btn)return;
+    const orig=btn.textContent;btn.textContent='✅ 已保存！';setTimeout(()=>{btn.textContent=orig;},1500);
+ };
+ window.deleteAn=function(idx){
+    if(!confirm('确定删除这条分析记录？'))return;
+    const list=loadAns();list.splice(idx,1);saveAns(list);renderAnsList();
+ };
+ renderAnsList();
 </script>
+<style>
+.an-section{background:#0d1422;border:1px solid #1e2d45;border-radius:12px;padding:20px 24px;margin:18px auto;max-width:900px;}
+.an-section h2{font-size:16px;font-weight:700;color:#b8cce0;margin:0 0 14px 0;display:flex;align-items:center;gap:8px;}
+.an-textarea{width:100%;min-height:110px;background:#0a0f1c;border:1px solid #1e2d45;border-radius:8px;padding:12px;color:#b8cce0;font-size:14px;font-family:inherit;resize:vertical;box-sizing:border-box;outline:none;transition:border-color .2s;}
+.an-textarea:focus{border-color:#0ddc82;}
+.an-save-row{display:flex;justify-content:flex-end;margin-top:10px;}
+.an-save-btn{background:#0ddc82;color:#080b12;border:none;border-radius:8px;padding:8px 22px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s;}
+.an-save-btn:hover{opacity:.85;}
+.an-divider{border:none;border-top:1px solid #1e2d45;margin:16px 0;}
+.an-hist-title{font-size:13px;color:#4a6080;margin-bottom:10px;font-weight:600;}
+.an-list{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow-y:auto;}
+.an-item{background:#0a0f1c;border:1px solid #1e2d45;border-radius:8px;padding:12px 14px;}
+.an-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.an-date{font-size:11px;color:#4a6080;}
+.an-del{background:none;border:none;color:#4a6080;cursor:pointer;font-size:14px;padding:0 4px;transition:color .2s;}
+.an-del:hover{color:#f04060;}
+.an-content{font-size:13px;color:#b8cce0;white-space:pre-wrap;word-break:break-word;line-height:1.6;}
+.an-empty{text-align:center;color:#4a6080;font-size:13px;padding:18px 0;}
+</style>
+<div class="an-section">
+  <h2>&#x1F4DD; 投资分析记录</h2>
+  <textarea class="an-textarea" id="analysisInput" placeholder="在此记录您的投资分析、市场观点、操作计划…"></textarea>
+  <div class="an-save-row"><button class="an-save-btn" onclick="saveAn()">💾 保存分析</button></div>
+  <hr class="an-divider">
+  <div class="an-hist-title">&#x1F4C2; 历史分析记录</div>
+  <div class="an-list" id="analysisList"></div>
+</div>
 </body>
 </html>
