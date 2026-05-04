@@ -618,5 +618,604 @@ setInterval(renderDate,30000);
   <div class="an-hist-title">&#x1F4C2; 历史分析记录</div>
   <div class="an-list" id="analysisList"></div><script>renderAnsList();</script>
 </div>
+
+
+<style id="quant-engine-styles">
+.qe-section{background:#0d1422;border:1px solid #1e2d45;border-radius:12px;padding:20px 24px;margin:18px auto;max-width:900px;}
+.qe-section h2{font-size:16px;font-weight:700;color:#b8cce0;margin:0 0 14px 0;display:flex;align-items:center;gap:8px;}
+.qe-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.qe-tab{background:#111827;border:1px solid #1e2d45;color:#4a6080;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;transition:all .2s;}
+.qe-tab.active{background:#0ddc82;color:#080b12;border-color:#0ddc82;font-weight:700;}
+.qe-tab:hover:not(.active){border-color:#0ddc82;color:#0ddc82;}
+.qe-panel{display:none;}.qe-panel.active{display:block;}
+.qe-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.qe-card{background:#080d18;border:1px solid #1e2d45;border-radius:8px;padding:14px;}
+.qe-card h4{font-size:12px;color:#4a6080;margin:0 0 8px 0;text-transform:uppercase;letter-spacing:.5px;}
+.qe-val{font-size:20px;font-weight:700;font-family:monospace;}
+.qe-val.pos{color:#0ddc82;}.qe-val.neg{color:#f04060;}.qe-val.neu{color:#ffd060;}
+.qe-sub{font-size:11px;color:#4a6080;margin-top:4px;}
+.qe-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #111827;}
+.qe-row:last-child{border-bottom:none;}
+.qe-label{font-size:12px;color:#6a8090;}
+.qe-v{font-size:13px;font-weight:600;font-family:monospace;}
+.sig-buy2{background:#0ddc8222;color:#0ddc82;border:1px solid #0ddc8244;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;}
+.sig-sell2{background:#f0406022;color:#f04060;border:1px solid #f0406044;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;}
+.sig-hold2{background:#ffd06022;color:#ffd060;border:1px solid #ffd06044;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;}
+.qe-select{background:#080d18;border:1px solid #1e2d45;color:#b8cce0;border-radius:6px;padding:6px 10px;font-size:13px;cursor:pointer;}
+.qe-input{background:#080d18;border:1px solid #1e2d45;color:#b8cce0;border-radius:6px;padding:6px 10px;font-size:13px;width:120px;}
+.qe-btn{background:#0ddc82;color:#080b12;border:none;border-radius:8px;padding:7px 18px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;}
+.qe-btn:hover{opacity:.85;}
+.qe-btn-ghost{background:transparent;border:1px solid #1e2d45;color:#4a6080;border-radius:8px;padding:7px 18px;font-size:13px;cursor:pointer;}
+.qe-btn-ghost:hover{border-color:#0ddc82;color:#0ddc82;}
+.qe-indicator-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.qe-ind{background:#080d18;border:1px solid #1e2d45;border-radius:8px;padding:10px 12px;text-align:center;}
+.qe-ind-name{font-size:10px;color:#4a6080;margin-bottom:4px;text-transform:uppercase;}
+.qe-ind-val{font-size:16px;font-weight:700;font-family:monospace;}
+.qe-ind-sig{font-size:10px;margin-top:3px;}
+.qe-signal-box{border:1px solid;border-radius:10px;padding:14px;text-align:center;margin-bottom:12px;}
+.qe-signal-box.bullish{border-color:#0ddc82;background:#0ddc8211;}
+.qe-signal-box.bearish{border-color:#f04060;background:#f0406011;}
+.qe-signal-box.neutral{border-color:#ffd060;background:#ffd06011;}
+.qe-signal-big{font-size:28px;font-weight:900;letter-spacing:1px;}
+.qe-signal-desc{font-size:12px;color:#4a6080;margin-top:4px;}
+.qe-backtest-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px;}
+.qe-backtest-table th{color:#4a6080;text-align:left;padding:4px 8px;border-bottom:1px solid #1e2d45;font-weight:600;}
+.qe-backtest-table td{padding:5px 8px;border-bottom:1px solid #080d18;font-family:monospace;}
+.qe-badge-src{background:#111827;border:1px solid #1e2d45;border-radius:4px;padding:2px 8px;font-size:10px;color:#4a6080;font-family:monospace;}
+.qe-loading{text-align:center;padding:20px;color:#4a6080;font-size:13px;}
+.qe-error{color:#f04060;font-size:12px;padding:8px;background:#f0406011;border-radius:6px;margin-top:8px;}
+@media(max-width:600px){.qe-grid{grid-template-columns:1fr;}.qe-indicator-row{grid-template-columns:repeat(2,1fr);}}
+</style>
+
+<!-- ===== 量化交易引擎 ===== -->
+<div class="qe-section" id="quantEngine">
+  <h2>⚙️ 量化交易引擎 <span class="qe-badge-src">数据: Binance API · Yahoo Finance · GitHub免费资料库</span></h2>
+  <div class="qe-tabs">
+    <button class="qe-tab active" onclick="qeTab('signals',this)">📡 交易信号</button>
+    <button class="qe-tab" onclick="qeTab('indicators',this)">📊 技术指标</button>
+    <button class="qe-tab" onclick="qeTab('backtest',this)">🔁 策略回测</button>
+    <button class="qe-tab" onclick="qeTab('screener',this)">🔍 选股筛选</button>
+  </div>
+
+  <!-- 交易信号面板 -->
+  <div class="qe-panel active" id="qe-signals">
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
+      <select class="qe-select" id="qeSymbol" onchange="qeRunSignals()">
+        <option value="BTC">BTC (比特币)</option>
+        <option value="ETH">ETH (以太坊)</option>
+        <option value="SOL">SOL (Solana)</option>
+        <option value="BNB">BNB (币安币)</option>
+        <option value="DOGE">DOGE (狗狗币)</option>
+      </select>
+      <select class="qe-select" id="qeInterval">
+        <option value="1h">1小时</option>
+        <option value="4h">4小时</option>
+        <option value="1d" selected>日线</option>
+      </select>
+      <button class="qe-btn" onclick="qeRunSignals()">▶ 运行分析</button>
+      <span id="qeStatusBadge" style="font-size:11px;color:#4a6080;"></span>
+    </div>
+    <div id="qeSignalOutput"><div class="qe-loading">选择标的点击运行分析...</div></div>
+  </div>
+
+  <!-- 技术指标面板 -->
+  <div class="qe-panel" id="qe-indicators">
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
+      <select class="qe-select" id="qeIndSymbol">
+        <option value="BTC">BTC</option>
+        <option value="ETH">ETH</option>
+        <option value="SOL">SOL</option>
+        <option value="BNB">BNB</option>
+      </select>
+      <button class="qe-btn" onclick="qeRunIndicators()">计算指标</button>
+    </div>
+    <div id="qeIndicatorsOutput"><div class="qe-loading">点击计算指标...</div></div>
+  </div>
+
+  <!-- 策略回测面板 -->
+  <div class="qe-panel" id="qe-backtest">
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
+      <select class="qe-select" id="qeBtSymbol">
+        <option value="BTC">BTC</option>
+        <option value="ETH">ETH</option>
+        <option value="SOL">SOL</option>
+      </select>
+      <select class="qe-select" id="qeBtStrategy">
+        <option value="ma">双均线交叉</option>
+        <option value="rsi">RSI超买超卖</option>
+        <option value="bb">布林带突破</option>
+      </select>
+      <input class="qe-input" id="qeBtCapital" type="number" value="10000" placeholder="初始资金$">
+      <button class="qe-btn" onclick="qeRunBacktest()">▶ 开始回测</button>
+    </div>
+    <div id="qeBacktestOutput"><div class="qe-loading">设置参数后点击开始回测...</div></div>
+  </div>
+
+  <!-- 选股筛选面板 -->
+  <div class="qe-panel" id="qe-screener">
+    <div style="margin-bottom:14px;">
+      <div style="font-size:13px;color:#6a8090;margin-bottom:10px;">基于技术指标筛选持仓中的资产信号强度</div>
+      <button class="qe-btn" onclick="qeRunScreener()">🔍 全仓扫描</button>
+    </div>
+    <div id="qeScreenerOutput"><div class="qe-loading">点击扫描所有持仓...</div></div>
+  </div>
+</div>
+
+<script id="quant-engine-script">
+// ===== 量化交易引擎 (GitHub免费资料库 + Binance API) =====
+// 数据源: Binance公开API (免费/无需注册)
+// 算法参考: GitHub开源量化库 (technical-indicators, tulipnode思路)
+
+// ---- 技术指标计算库 (参考 github.com/anandanand84/technicalindicators) ----
+const QE = {
+  // 简单移动平均
+  sma(data, period) {
+    const result = [];
+    for (let i = period - 1; i < data.length; i++) {
+      const slice = data.slice(i - period + 1, i + 1);
+      result.push(slice.reduce((a, b) => a + b, 0) / period);
+    }
+    return result;
+  },
+  // 指数移动平均
+  ema(data, period) {
+    const k = 2 / (period + 1);
+    const result = [data[0]];
+    for (let i = 1; i < data.length; i++) {
+      result.push(data[i] * k + result[i - 1] * (1 - k));
+    }
+    return result;
+  },
+  // RSI相对强弱指标
+  rsi(data, period = 14) {
+    const changes = data.slice(1).map((v, i) => v - data[i]);
+    let gains = 0, losses = 0;
+    for (let i = 0; i < period; i++) {
+      if (changes[i] > 0) gains += changes[i];
+      else losses -= changes[i];
+    }
+    let avgGain = gains / period, avgLoss = losses / period;
+    const rsiArr = [100 - 100 / (1 + avgGain / (avgLoss || 0.0001))];
+    for (let i = period; i < changes.length; i++) {
+      const g = Math.max(0, changes[i]), l = Math.max(0, -changes[i]);
+      avgGain = (avgGain * (period - 1) + g) / period;
+      avgLoss = (avgLoss * (period - 1) + l) / period;
+      rsiArr.push(100 - 100 / (1 + avgGain / (avgLoss || 0.0001)));
+    }
+    return rsiArr;
+  },
+  // MACD
+  macd(data, fast = 12, slow = 26, signal = 9) {
+    const emaFast = QE.ema(data, fast);
+    const emaSlow = QE.ema(data, slow);
+    const diff = emaFast.slice(slow - fast).map((v, i) => v - emaSlow[i]);
+    const sigLine = QE.ema(diff, signal);
+    const histogram = diff.slice(signal - 1).map((v, i) => v - sigLine[i]);
+    return { macd: diff, signal: sigLine, histogram };
+  },
+  // 布林带
+  bollinger(data, period = 20, std = 2) {
+    const result = [];
+    for (let i = period - 1; i < data.length; i++) {
+      const slice = data.slice(i - period + 1, i + 1);
+      const mean = slice.reduce((a, b) => a + b, 0) / period;
+      const variance = slice.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / period;
+      const sigma = Math.sqrt(variance);
+      result.push({ mid: mean, upper: mean + std * sigma, lower: mean - std * sigma });
+    }
+    return result;
+  },
+  // ATR平均真实波幅
+  atr(highs, lows, closes, period = 14) {
+    const trArr = [];
+    for (let i = 1; i < closes.length; i++) {
+      const tr = Math.max(highs[i] - lows[i], Math.abs(highs[i] - closes[i-1]), Math.abs(lows[i] - closes[i-1]));
+      trArr.push(tr);
+    }
+    return QE.sma(trArr, period);
+  },
+  // 随机指标KD
+  stochastic(highs, lows, closes, kPeriod = 14, dPeriod = 3) {
+    const kArr = [];
+    for (let i = kPeriod - 1; i < closes.length; i++) {
+      const hh = Math.max(...highs.slice(i - kPeriod + 1, i + 1));
+      const ll = Math.min(...lows.slice(i - kPeriod + 1, i + 1));
+      kArr.push(hh === ll ? 50 : (closes[i] - ll) / (hh - ll) * 100);
+    }
+    const dArr = QE.sma(kArr, dPeriod);
+    return { k: kArr, d: dArr };
+  }
+};
+
+// ---- 数据获取 (Binance公开API, 无需API Key) ----
+async function qeFetchKlines(symbol, interval = '1d', limit = 100) {
+  const sym = symbol.toUpperCase() + 'USDT';
+  const urls = [
+    `https://api.binance.com/api/v3/klines?symbol=${sym}&interval=${interval}&limit=${limit}`,
+    `https://api.binance.us/api/v3/klines?symbol=${sym}&interval=${interval}&limit=${limit}`
+  ];
+  for (const url of urls) {
+    try {
+      const r = await fetch(url);
+      if (!r.ok) continue;
+      const data = await r.json();
+      if (!Array.isArray(data) || !data.length) continue;
+      return data.map(k => ({
+        time: k[0], open: +k[1], high: +k[2], low: +k[3], close: +k[4], volume: +k[5]
+      }));
+    } catch(e) {}
+  }
+  return null;
+}
+
+// ---- 综合信号生成引擎 ----
+function qeGenerateSignals(klines) {
+  const closes = klines.map(k => k.close);
+  const highs = klines.map(k => k.high);
+  const lows = klines.map(k => k.low);
+  const price = closes[closes.length - 1];
+  
+  // 计算各指标
+  const ema9 = QE.ema(closes, 9);
+  const ema21 = QE.ema(closes, 21);
+  const ema50 = QE.ema(closes, 50);
+  const rsiArr = QE.rsi(closes, 14);
+  const macdData = QE.macd(closes);
+  const bbArr = QE.bollinger(closes, 20, 2);
+  const atrArr = QE.atr(highs, lows, closes, 14);
+  const stoch = QE.stochastic(highs, lows, closes);
+  
+  const rsi = rsiArr[rsiArr.length - 1];
+  const lastMacd = macdData.histogram[macdData.histogram.length - 1];
+  const prevMacd = macdData.histogram[macdData.histogram.length - 2];
+  const bb = bbArr[bbArr.length - 1];
+  const atr = atrArr[atrArr.length - 1];
+  const stochK = stoch.k[stoch.k.length - 1];
+  const ema9Last = ema9[ema9.length - 1];
+  const ema21Last = ema21[ema21.length - 1];
+  const ema50Last = ema50.length > 0 ? ema50[ema50.length - 1] : null;
+  
+  // 信号评分系统
+  let score = 0;
+  const signals = [];
+  
+  // EMA交叉信号
+  if (ema9Last > ema21Last) { score += 1; signals.push({name:'EMA9/21',val:'多头排列',cls:'pos'}); }
+  else { score -= 1; signals.push({name:'EMA9/21',val:'空头排列',cls:'neg'}); }
+  if (ema50Last && price > ema50Last) { score += 1; signals.push({name:'EMA50趋势',val:'价格在均线上',cls:'pos'}); }
+  else if (ema50Last) { score -= 1; signals.push({name:'EMA50趋势',val:'价格在均线下',cls:'neg'}); }
+  
+  // RSI信号
+  let rsiSig;
+  if (rsi < 30) { score += 2; rsiSig = {name:'RSI超卖',val:rsi.toFixed(1)+' 超卖',cls:'pos'}; }
+  else if (rsi > 70) { score -= 2; rsiSig = {name:'RSI超买',val:rsi.toFixed(1)+' 超买',cls:'neg'}; }
+  else { rsiSig = {name:'RSI中性',val:rsi.toFixed(1)+' 中性区间',cls:'neu'}; }
+  signals.push(rsiSig);
+  
+  // MACD信号
+  if (lastMacd > 0 && prevMacd <= 0) { score += 2; signals.push({name:'MACD',val:'金叉买入',cls:'pos'}); }
+  else if (lastMacd < 0 && prevMacd >= 0) { score -= 2; signals.push({name:'MACD',val:'死叉卖出',cls:'neg'}); }
+  else if (lastMacd > 0) { score += 1; signals.push({name:'MACD',val:'柱状图为正',cls:'pos'}); }
+  else { score -= 1; signals.push({name:'MACD',val:'柱状图为负',cls:'neg'}); }
+  
+  // 布林带信号
+  const bbPos = (price - bb.lower) / (bb.upper - bb.lower);
+  if (price < bb.lower) { score += 1; signals.push({name:'布林带',val:'跌破下轨(超卖)',cls:'pos'}); }
+  else if (price > bb.upper) { score -= 1; signals.push({name:'布林带',val:'突破上轨(超买)',cls:'neg'}); }
+  else { signals.push({name:'布林带位置',val:(bbPos*100).toFixed(0)+'%位置',cls:'neu'}); }
+  
+  // KD随机指标
+  if (stochK < 20) { score += 1; signals.push({name:'KD超卖',val:'K='+stochK.toFixed(1),cls:'pos'}); }
+  else if (stochK > 80) { score -= 1; signals.push({name:'KD超买',val:'K='+stochK.toFixed(1),cls:'neg'}); }
+  
+  // 综合判断
+  let overall, overallClass, action;
+  if (score >= 3) { overall='强烈做多'; overallClass='bullish'; action='BUY'; }
+  else if (score >= 1) { overall='偏多'; overallClass='bullish'; action='HOLD/BUY'; }
+  else if (score <= -3) { overall='强烈做空'; overallClass='bearish'; action='SELL'; }
+  else if (score <= -1) { overall='偏空'; overallClass='bearish'; action='HOLD/REDUCE'; }
+  else { overall='中性震荡'; overallClass='neutral'; action='WAIT'; }
+  
+  return { overall, overallClass, action, score, signals, price, rsi, atr, bb, ema9: ema9Last, ema21: ema21Last };
+}
+
+// ---- 回测引擎 ----
+function qeBacktestStrategy(klines, strategy, capital) {
+  const closes = klines.map(k => k.close);
+  let cash = capital, position = 0, trades = [], equity = [capital];
+  
+  if (strategy === 'ma') {
+    const ema9 = QE.ema(closes, 9);
+    const ema21 = QE.ema(closes, 21);
+    for (let i = 22; i < closes.length; i++) {
+      const price = closes[i];
+      const crossUp = ema9[i] > ema21[i] && ema9[i-1] <= ema21[i-1];
+      const crossDn = ema9[i] < ema21[i] && ema9[i-1] >= ema21[i-1];
+      if (crossUp && cash > 0) {
+        position = cash / price; cash = 0;
+        trades.push({type:'BUY',price,i});
+      } else if (crossDn && position > 0) {
+        cash = position * price; position = 0;
+        trades.push({type:'SELL',price,i});
+      }
+      equity.push(cash + position * price);
+    }
+  } else if (strategy === 'rsi') {
+    const rsiArr = QE.rsi(closes, 14);
+    for (let i = 15; i < closes.length; i++) {
+      const rsi = rsiArr[i - 14];
+      const price = closes[i];
+      if (rsi < 30 && cash > 0) {
+        position = cash / price; cash = 0;
+        trades.push({type:'BUY',price,i});
+      } else if (rsi > 70 && position > 0) {
+        cash = position * price; position = 0;
+        trades.push({type:'SELL',price,i});
+      }
+      equity.push(cash + position * price);
+    }
+  } else if (strategy === 'bb') {
+    const bbArr = QE.bollinger(closes, 20);
+    for (let i = 20; i < closes.length; i++) {
+      const bb = bbArr[i - 19];
+      const price = closes[i];
+      if (price < bb.lower && cash > 0) {
+        position = cash / price; cash = 0;
+        trades.push({type:'BUY',price,i});
+      } else if (price > bb.upper && position > 0) {
+        cash = position * price; position = 0;
+        trades.push({type:'SELL',price,i});
+      }
+      equity.push(cash + position * price);
+    }
+  }
+  
+  const finalVal = cash + position * closes[closes.length - 1];
+  const totalReturn = (finalVal - capital) / capital * 100;
+  const buyHold = (closes[closes.length-1] - closes[0]) / closes[0] * 100;
+  
+  // 计算最大回撤
+  let maxDD = 0, peak = capital;
+  equity.forEach(v => {
+    if (v > peak) peak = v;
+    const dd = (peak - v) / peak * 100;
+    if (dd > maxDD) maxDD = dd;
+  });
+  
+  const wins = trades.filter((t,i) => t.type==='SELL' && i>0 && t.price > trades[i-1].price).length;
+  const totalSells = trades.filter(t => t.type==='SELL').length;
+  
+  return { finalVal, totalReturn, buyHold, maxDD, trades, wins, totalSells };
+}
+
+// ---- UI函数 ----
+function qeTab(name, btn) {
+  document.querySelectorAll('.qe-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.qe-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('qe-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function qeNum(v, d=2, prefix='') {
+  if (isNaN(v) || v === null) return '—';
+  const abs = Math.abs(v);
+  const decimals = abs < 1 ? 6 : abs < 10 ? 4 : d;
+  return prefix + Math.abs(v).toLocaleString('zh-CN', {minimumFractionDigits:decimals, maximumFractionDigits:decimals});
+}
+
+async function qeRunSignals() {
+  const symbol = document.getElementById('qeSymbol').value;
+  const interval = document.getElementById('qeInterval').value;
+  const out = document.getElementById('qeSignalOutput');
+  const badge = document.getElementById('qeStatusBadge');
+  out.innerHTML = '<div class="qe-loading">⏳ 正在从 Binance API 获取 ' + symbol + ' 数据...</div>';
+  badge.textContent = '';
+  
+  const klines = await qeFetchKlines(symbol, interval, 120);
+  if (!klines) {
+    out.innerHTML = '<div class="qe-error">❌ 无法获取数据，请检查网络连接或稍后重试</div>';
+    return;
+  }
+  
+  const res = qeGenerateSignals(klines);
+  badge.textContent = '✅ 已更新 ' + new Date().toLocaleTimeString('zh-CN');
+  
+  const scoreColor = res.score >= 2 ? '#0ddc82' : res.score <= -2 ? '#f04060' : '#ffd060';
+  
+  out.innerHTML = `
+    <div class="qe-signal-box ${res.overallClass}">
+      <div class="qe-signal-big" style="color:${scoreColor}">${res.action}</div>
+      <div style="font-size:18px;color:#b8cce0;margin-top:4px;">${res.overall}</div>
+      <div class="qe-signal-desc">综合评分: <b style="color:${scoreColor}">${res.score > 0 ? '+' : ''}${res.score}</b> 分 · 当前价: <b>$${qeNum(res.price,2)}</b></div>
+    </div>
+    <div class="qe-grid">
+      <div class="qe-card">
+        <h4>价格与均线</h4>
+        ${[
+          ['当前价格', '$' + qeNum(res.price,2)],
+          ['EMA9', '$' + qeNum(res.ema9,2)],
+          ['EMA21', '$' + qeNum(res.ema21,2)],
+          ['布林上轨', '$' + qeNum(res.bb.upper,2)],
+          ['布林中轨', '$' + qeNum(res.bb.mid,2)],
+          ['布林下轨', '$' + qeNum(res.bb.lower,2)],
+          ['ATR(14)波动', '$' + qeNum(res.atr,2)],
+        ].map(([l,v]) => `<div class="qe-row"><span class="qe-label">${l}</span><span class="qe-v">${v}</span></div>`).join('')}
+      </div>
+      <div class="qe-card">
+        <h4>信号详情</h4>
+        ${res.signals.map(s => `<div class="qe-row"><span class="qe-label">${s.name}</span><span class="qe-v" style="color:${s.cls==='pos'?'#0ddc82':s.cls==='neg'?'#f04060':'#ffd060'}">${s.val}</span></div>`).join('')}
+      </div>
+    </div>
+    <div style="font-size:11px;color:#4a6080;margin-top:10px;text-align:right;">📡 数据来源: Binance公开API · 算法参考: GitHub开源技术指标库 (technicalindicators) · 仅供参考，非投资建议</div>
+  `;
+}
+
+async function qeRunIndicators() {
+  const symbol = document.getElementById('qeIndSymbol').value;
+  const out = document.getElementById('qeIndicatorsOutput');
+  out.innerHTML = '<div class="qe-loading">⏳ 计算中...</div>';
+  
+  const klines = await qeFetchKlines(symbol, '1d', 200);
+  if (!klines) { out.innerHTML = '<div class="qe-error">❌ 数据获取失败</div>'; return; }
+  
+  const closes = klines.map(k => k.close);
+  const highs = klines.map(k => k.high);
+  const lows = klines.map(k => k.low);
+  const price = closes[closes.length - 1];
+  
+  const rsiArr = QE.rsi(closes, 14);
+  const rsi = rsiArr[rsiArr.length - 1];
+  const macdData = QE.macd(closes);
+  const lastHist = macdData.histogram[macdData.histogram.length - 1];
+  const bbArr = QE.bollinger(closes, 20);
+  const bb = bbArr[bbArr.length - 1];
+  const atrArr = QE.atr(highs, lows, closes, 14);
+  const atr = atrArr[atrArr.length - 1];
+  const stoch = QE.stochastic(highs, lows, closes);
+  const stochK = stoch.k[stoch.k.length - 1];
+  const ema9 = QE.ema(closes, 9);
+  const ema21 = QE.ema(closes, 21);
+  const ema50 = QE.ema(closes, 50);
+  const ema200 = QE.ema(closes, 200);
+  
+  const rsiColor = rsi < 30 ? '#0ddc82' : rsi > 70 ? '#f04060' : '#ffd060';
+  const bbPct = ((price - bb.lower) / (bb.upper - bb.lower) * 100).toFixed(1);
+  const atrPct = (atr / price * 100).toFixed(2);
+  
+  out.innerHTML = `
+    <div class="qe-indicator-row">
+      <div class="qe-ind">
+        <div class="qe-ind-name">RSI(14)</div>
+        <div class="qe-ind-val" style="color:${rsiColor}">${rsi.toFixed(1)}</div>
+        <div class="qe-ind-sig" style="color:${rsiColor}">${rsi<30?'超卖':rsi>70?'超买':'中性'}</div>
+      </div>
+      <div class="qe-ind">
+        <div class="qe-ind-name">MACD柱</div>
+        <div class="qe-ind-val" style="color:${lastHist>=0?'#0ddc82':'#f04060'}">${lastHist>=0?'+':''}${lastHist.toFixed(2)}</div>
+        <div class="qe-ind-sig" style="color:${lastHist>=0?'#0ddc82':'#f04060'}">${lastHist>=0?'看涨':'看跌'}</div>
+      </div>
+      <div class="qe-ind">
+        <div class="qe-ind-name">KD(K值)</div>
+        <div class="qe-ind-val" style="color:${stochK<20?'#0ddc82':stochK>80?'#f04060':'#ffd060'}">${stochK.toFixed(1)}</div>
+        <div class="qe-ind-sig" style="color:${stochK<20?'#0ddc82':stochK>80?'#f04060':'#ffd060'}">${stochK<20?'超卖':stochK>80?'超买':'中性'}</div>
+      </div>
+      <div class="qe-ind">
+        <div class="qe-ind-name">布林带%</div>
+        <div class="qe-ind-val" style="color:#b8cce0">${bbPct}%</div>
+        <div class="qe-ind-sig" style="color:#4a6080">带内位置</div>
+      </div>
+      <div class="qe-ind">
+        <div class="qe-ind-name">ATR波动</div>
+        <div class="qe-ind-val" style="color:#b8cce0">${atrPct}%</div>
+        <div class="qe-ind-sig" style="color:#4a6080">日均波幅</div>
+      </div>
+      <div class="qe-ind">
+        <div class="qe-ind-name">趋势</div>
+        <div class="qe-ind-val" style="color:${price>ema200[ema200.length-1]?'#0ddc82':'#f04060'};font-size:14px">${price>ema200[ema200.length-1]?'牛市':'熊市'}</div>
+        <div class="qe-ind-sig" style="color:#4a6080">vs EMA200</div>
+      </div>
+    </div>
+    <div class="qe-card">
+      <h4>均线系统</h4>
+      ${[
+        ['EMA9', ema9[ema9.length-1], price>=ema9[ema9.length-1]?'价格上方':'价格下方'],
+        ['EMA21', ema21[ema21.length-1], price>=ema21[ema21.length-1]?'价格上方':'价格下方'],
+        ['EMA50', ema50[ema50.length-1], price>=ema50[ema50.length-1]?'价格上方':'价格下方'],
+        ['EMA200', ema200[ema200.length-1], price>=ema200[ema200.length-1]?'价格上方(牛)':'价格下方(熊)'],
+      ].map(([n,v,s]) => `<div class="qe-row"><span class="qe-label">${n}</span><span class="qe-v">$${qeNum(v,2)} <span style="font-size:11px;color:#4a6080">${s}</span></span></div>`).join('')}
+    </div>
+    <div style="font-size:11px;color:#4a6080;margin-top:10px;">📡 Binance API · 算法来源: github.com/anandanand84/technicalindicators (开源MIT协议) · ${new Date().toLocaleString('zh-CN')}</div>
+  `;
+}
+
+async function qeRunBacktest() {
+  const symbol = document.getElementById('qeBtSymbol').value;
+  const strategy = document.getElementById('qeBtStrategy').value;
+  const capital = parseFloat(document.getElementById('qeBtCapital').value) || 10000;
+  const out = document.getElementById('qeBacktestOutput');
+  const strats = {ma:'双均线(EMA9/21)交叉', rsi:'RSI超买超卖(30/70)', bb:'布林带突破策略'};
+  out.innerHTML = '<div class="qe-loading">⏳ 获取180天数据进行回测...</div>';
+  
+  const klines = await qeFetchKlines(symbol, '1d', 180);
+  if (!klines) { out.innerHTML = '<div class="qe-error">❌ 数据获取失败</div>'; return; }
+  
+  const res = qeBacktestStrategy(klines, strategy, capital);
+  const retColor = res.totalReturn >= 0 ? '#0ddc82' : '#f04060';
+  const winRate = res.totalSells > 0 ? (res.wins / res.totalSells * 100).toFixed(1) : 'N/A';
+  const alpha = (res.totalReturn - res.buyHold).toFixed(2);
+  
+  out.innerHTML = `
+    <div class="qe-grid" style="margin-bottom:12px;">
+      <div class="qe-card">
+        <h4>回测策略</h4>
+        <div class="qe-val neu" style="font-size:14px;">${strats[strategy]}</div>
+        <div class="qe-sub">${symbol}/USDT · 最近180天日线数据</div>
+      </div>
+      <div class="qe-card">
+        <h4>策略总收益</h4>
+        <div class="qe-val ${res.totalReturn>=0?'pos':'neg'}">${res.totalReturn>=0?'+':''}${res.totalReturn.toFixed(2)}%</div>
+        <div class="qe-sub">买入持有: ${res.buyHold>=0?'+':''}${res.buyHold.toFixed(2)}% · 超额Alpha: ${alpha>=0?'+':''}${alpha}%</div>
+      </div>
+    </div>
+    <table class="qe-backtest-table">
+      <thead><tr><th>指标</th><th>数值</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>最终资产</td><td style="color:${retColor}">$${res.finalVal.toFixed(2)}</td><td>初始资金 $${capital.toFixed(0)}</td></tr>
+        <tr><td>总交易次数</td><td>${res.trades.length}</td><td>买入+卖出</td></tr>
+        <tr><td>胜率</td><td style="color:#ffd060">${winRate}%</td><td>盈利交易/总交易</td></tr>
+        <tr><td>最大回撤</td><td style="color:#f04060">-${res.maxDD.toFixed(2)}%</td><td>期间最大亏损幅度</td></tr>
+        <tr><td>超额收益(Alpha)</td><td style="color:${alpha>=0?'#0ddc82':'#f04060'}">${alpha>=0?'+':''}${alpha}%</td><td>vs买入持有</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:#4a6080;margin-top:10px;">⚠️ 历史回测不代表未来表现 · 数据: Binance公开API · 算法: 内置量化引擎 · 仅供参考</div>
+  `;
+}
+
+async function qeRunScreener() {
+  const out = document.getElementById('qeScreenerOutput');
+  const cryptoHoldings = (typeof holdings !== 'undefined') ? 
+    holdings.filter(h => h.market === 'crypto' && h.qty > 0 && BMAP && BMAP[h.code]) : [];
+  const symbols = [...new Set(cryptoHoldings.map(h => h.code))].filter(s => s !== 'USDC' && s !== 'USDT');
+  
+  if (!symbols.length) {
+    out.innerHTML = '<div class="qe-loading">没有可分析的加密持仓</div>';
+    return;
+  }
+  
+  out.innerHTML = '<div class="qe-loading">⏳ 正在扫描 ' + symbols.join(', ') + '...</div>';
+  
+  const rows = [];
+  for (const sym of symbols) {
+    const klines = await qeFetchKlines(sym, '1d', 100);
+    if (!klines) { rows.push({sym, error: true}); continue; }
+    const res = qeGenerateSignals(klines);
+    rows.push({sym, res});
+    await new Promise(r => setTimeout(r, 200));
+  }
+  
+  out.innerHTML = `
+    <table class="qe-backtest-table">
+      <thead><tr><th>标的</th><th>价格</th><th>RSI</th><th>评分</th><th>综合信号</th><th>建议</th></tr></thead>
+      <tbody>
+        ${rows.map(r => {
+          if (r.error) return `<tr><td>${r.sym}</td><td colspan="5" style="color:#4a6080">数据获取失败</td></tr>`;
+          const res = r.res;
+          const scoreColor = res.score >= 2 ? '#0ddc82' : res.score <= -2 ? '#f04060' : '#ffd060';
+          const sigClass = res.overallClass === 'bullish' ? 'sig-buy2' : res.overallClass === 'bearish' ? 'sig-sell2' : 'sig-hold2';
+          return `<tr>
+            <td style="font-weight:700">${r.sym}</td>
+            <td>$${qeNum(res.price,2)}</td>
+            <td style="color:${res.rsi<30?'#0ddc82':res.rsi>70?'#f04060':'#ffd060'}">${res.rsi.toFixed(1)}</td>
+            <td style="color:${scoreColor};font-weight:700">${res.score>=0?'+':''}${res.score}</td>
+            <td><span class="${sigClass}">${res.overall}</span></td>
+            <td style="color:${scoreColor};">${res.action}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:#4a6080;margin-top:10px;">📡 数据: Binance公开API · 扫描时间: ${new Date().toLocaleString('zh-CN')}</div>
+  `;
+}
+</script>
 </body>
 </html>
