@@ -137,6 +137,25 @@ td{padding:11px 12px;font-size:13px;vertical-align:top}
 .cur-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:var(--dim);border-radius:4px;padding:1px 6px;font-size:10px;cursor:pointer;transition:all 0.2s;font-family:inherit;line-height:1.6;}
 .cur-btn:hover{background:rgba(255,255,255,0.15);color:#fff;}
 .cur-btn.cur-active{background:rgba(0,200,100,0.25);border-color:var(--green);color:var(--green);}
+
+/* DAILY VIEW */
+.daily-section{background:var(--s1);border:1px solid var(--border);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.daily-hdr{background:var(--s2);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.daily-hdr-title{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.daily-body{padding:16px 18px}
+.daily-empty{color:var(--dim);font-size:12px;text-align:center;padding:20px}
+.daily-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:10px}
+.daily-card:last-child{margin-bottom:0}
+.daily-meta{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.daily-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber)}
+.daily-card-title{font-size:14px;font-weight:500;color:var(--white);margin-bottom:8px}
+.daily-card-content{font-size:12px;line-height:1.9;color:var(--text);white-space:pre-wrap}
+.daily-card-content b,.daily-card-content strong{color:var(--white)}
+.daily-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.daily-tag{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 8px;border-radius:20px;background:rgba(245,166,35,.1);color:var(--amber);border:1px solid rgba(245,166,35,.2)}
+.daily-hdr-toggle{color:var(--dim);font-size:18px;transition:transform .2s}
+.daily-hdr-toggle.open{transform:rotate(45deg)}
+.daily-body.collapsed{display:none}
 </style>
 </head>
 <body>
@@ -171,6 +190,18 @@ td{padding:11px 12px;font-size:13px;vertical-align:top}
 
 <!-- TICKER TAPE -->
 <div class="tape-wrap"><div class="tape-inner" id="tapeInner">行情加载中...</div></div>
+
+<!-- DAILY VIEW -->
+<div class="daily-section">
+ <div class="daily-hdr" onclick="toggleDaily()">
+ <div class="daily-hdr-title"><div class="sec-dot" style="background:var(--amber)"></div>每日观点 · DAILY VIEW</div>
+ <div class="daily-hdr-toggle open" id="dailyToggle">+</div>
+ </div>
+ <div class="daily-body" id="dailyBody">
+ <div class="daily-empty" id="dailyEmpty">加载中...</div>
+ <div id="dailyCards"></div>
+ </div>
+</div>
 
 <!-- ALERTS -->
 <div id="alertArea"></div>
@@ -680,8 +711,27 @@ document.getElementById('autoToggle').addEventListener('change',function(){
 });
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeM();});
 
+// DAILY VIEW
+function toggleDaily(){const b=document.getElementById('dailyBody'),t=document.getElementById('dailyToggle');b.classList.toggle('collapsed');t.classList.toggle('open');}
+async function loadAnalysis(){
+ try{
+ const r=await fetch('analysis.json');if(!r.ok)throw new Error();
+ const data=await r.json();
+ if(!data.length){document.getElementById('dailyEmpty').textContent='暂无分析观点';return;}
+ document.getElementById('dailyEmpty').style.display='none';
+ document.getElementById('dailyCards').innerHTML=data.slice(0,7).map(e=>`
+ <div class="daily-card">
+ <div class="daily-meta"><span class="daily-date">📌 ${e.date} ${e.time||''}</span></div>
+ <div class="daily-card-title">${e.title}</div>
+ <div class="daily-card-content">${e.content}</div>
+ ${e.tags&&e.tags.length?`<div class="daily-tags">${e.tags.map(t=>`<span class="daily-tag">${t}</span>`).join('')}</div>`:''}
+ </div>`).join('');
+ }catch(e){document.getElementById('dailyEmpty').textContent='暂无分析观点';}
+}
+
 // INIT
 render();renderTape();
+loadAnalysis();
 setTimeout(autoUpdatePrices,800);
 setInterval(renderDate,30000);
 </script>
