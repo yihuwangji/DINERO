@@ -1,21 +1,22 @@
 'use client'
+export const dynamic = 'force-dynamic'
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Profile } from '@/lib/types'
-import { useLocale } from '@/lib/i18n'
+import { useI18n } from '@/lib/i18n'
 
 export default function LoginPage() {
   const router = useRouter()
-  const { locale, setLocale, t } = useLocale()
+  const { locale, setLocale, t } = useI18n()
   const [pin, setPin] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleDigit = useCallback(
     (digit: string) => {
-      if (pin.length < 6) {
+      if (pin.length < 4) {
         setPin((p) => p + digit)
         setError('')
       }
@@ -66,104 +67,98 @@ export default function LoginPage() {
     }
   }, [pin, router, t])
 
-  const digits = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex flex-col items-center justify-center px-4">
-      {/* Language Toggle */}
-      <div className="absolute top-4 right-4 flex gap-2">
-        <button
-          onClick={() => setLocale('es')}
-          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-            locale === 'es'
-              ? 'bg-orange-500 text-white'
-              : 'bg-white text-gray-600 border border-gray-200'
-          }`}
-        >
-          ES
-        </button>
-        <button
-          onClick={() => setLocale('zh')}
-          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-            locale === 'zh'
-              ? 'bg-orange-500 text-white'
-              : 'bg-white text-gray-600 border border-gray-200'
-          }`}
-        >
-          中文
-        </button>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex flex-col items-center justify-center px-4 relative">
+      {/* Language toggle */}
+      <button
+        onClick={() => setLocale(locale === 'es' ? 'zh' : 'es')}
+        className="absolute top-4 right-4 px-3 py-2 rounded-xl bg-white border border-gray-200 shadow text-sm font-semibold text-gray-600 hover:bg-gray-50"
+        style={{ minHeight: '44px' }}
+      >
+        {locale === 'es' ? 'ZH' : 'ES'}
+      </button>
 
-      {/* Logo */}
-      <div className="mb-8 text-center">
-        <div className="text-6xl mb-3">🍺</div>
-        <h1 className="text-4xl font-bold text-orange-500">{t('login.title')}</h1>
-        <p className="text-gray-500 mt-1">{t('login.subtitle')}</p>
-      </div>
+      <div className="w-full max-w-md mx-auto flex flex-col items-center gap-6">
+        {/* Logo */}
+        <div className="text-center">
+          <div className="text-6xl mb-2">🍺</div>
+          <h1 className="text-4xl font-black" style={{ color: '#f97316' }}>
+            BarGo
+          </h1>
+          <p className="text-gray-500 mt-1 text-sm">{t('login.subtitle')}</p>
+        </div>
 
-      {/* PIN Display */}
-      <div className="w-full max-w-xs mb-6">
-        <p className="text-center text-gray-600 mb-3 text-sm">{t('login.enter_pin')}</p>
-        <div className="flex justify-center gap-3">
-          {Array.from({ length: Math.max(pin.length, 4) }).map((_, i) => (
+        {/* PIN dots */}
+        <div className="flex gap-4">
+          {[0, 1, 2, 3].map((i) => (
             <div
               key={i}
-              className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all ${
-                i < pin.length
-                  ? 'bg-orange-500 border-orange-500'
-                  : 'bg-white border-gray-300'
-              }`}
+              className="w-14 h-14 rounded-xl border-2 flex items-center justify-center text-2xl font-bold transition-all"
+              style={{
+                borderColor: i < pin.length ? '#f97316' : '#e5e7eb',
+                backgroundColor: i < pin.length ? '#fff7ed' : '#f9fafb',
+              }}
             >
-              {i < pin.length && (
-                <span className="w-3 h-3 bg-white rounded-full block" />
-              )}
+              {i < pin.length ? '●' : ''}
             </div>
           ))}
         </div>
 
+        {/* Error */}
         {error && (
-          <p className="text-red-500 text-sm text-center mt-3 bg-red-50 py-2 px-3 rounded-lg">
-            {error}
-          </p>
+          <p className="text-red-500 text-sm text-center font-medium">{error}</p>
         )}
-      </div>
 
-      {/* Keypad */}
-      <div className="w-full max-w-xs">
-        <div className="grid grid-cols-3 gap-3">
-          {digits.slice(0, 9).map((d) => (
+        {/* Keypad */}
+        <div className="w-full max-w-xs">
+          <div className="grid grid-cols-3 gap-3">
+            {keys.map((k) => (
+              <button
+                key={k}
+                onClick={() => handleDigit(k)}
+                disabled={loading}
+                className="rounded-xl bg-gray-100 hover:bg-gray-200 active:bg-gray-300 shadow text-2xl font-bold text-gray-800 transition-colors disabled:opacity-50"
+                style={{ minHeight: '60px' }}
+              >
+                {k}
+              </button>
+            ))}
+            {/* Bottom row: backspace, 0, submit */}
             <button
-              key={d}
-              onClick={() => handleDigit(d)}
+              onClick={handleBackspace}
               disabled={loading}
-              className="h-16 bg-white rounded-2xl text-2xl font-semibold text-gray-800 shadow-md active:scale-95 transition-transform border border-gray-100 hover:bg-orange-50 disabled:opacity-50"
+              className="rounded-xl bg-gray-100 hover:bg-gray-200 active:bg-gray-300 shadow text-2xl font-bold text-gray-800 transition-colors disabled:opacity-50"
+              style={{ minHeight: '60px' }}
             >
-              {d}
+              ⌫
             </button>
-          ))}
-          {/* Bottom row: backspace, 0, submit */}
-          <button
-            onClick={handleBackspace}
-            disabled={loading || pin.length === 0}
-            className="h-16 bg-white rounded-2xl text-2xl font-semibold text-gray-600 shadow-md active:scale-95 transition-transform border border-gray-100 hover:bg-gray-50 disabled:opacity-30"
-          >
-            {t('login.backspace')}
-          </button>
-          <button
-            onClick={() => handleDigit('0')}
-            disabled={loading}
-            className="h-16 bg-white rounded-2xl text-2xl font-semibold text-gray-800 shadow-md active:scale-95 transition-transform border border-gray-100 hover:bg-orange-50 disabled:opacity-50"
-          >
-            0
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={loading || pin.length === 0}
-            className="h-16 bg-orange-500 rounded-2xl text-2xl font-semibold text-white shadow-md active:scale-95 transition-transform hover:bg-orange-600 disabled:opacity-50"
-          >
-            {loading ? '...' : t('login.submit')}
-          </button>
+            <button
+              onClick={() => handleDigit('0')}
+              disabled={loading}
+              className="rounded-xl bg-gray-100 hover:bg-gray-200 active:bg-gray-300 shadow text-2xl font-bold text-gray-800 transition-colors disabled:opacity-50"
+              style={{ minHeight: '60px' }}
+            >
+              0
+            </button>
+            <button
+              onClick={handleSubmit}
+              disabled={loading || pin.length === 0}
+              className="rounded-xl text-white shadow text-2xl font-bold transition-colors disabled:opacity-50"
+              style={{
+                minHeight: '60px',
+                backgroundColor: '#f97316',
+              }}
+            >
+              {loading ? '...' : '✓'}
+            </button>
+          </div>
         </div>
+
+        {loading && (
+          <p className="text-orange-500 text-sm">{t('login.loading')}</p>
+        )}
       </div>
     </div>
   )

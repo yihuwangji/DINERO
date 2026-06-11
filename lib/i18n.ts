@@ -57,7 +57,7 @@ const translations = {
     'waiter.order_tab': 'Pedido',
     'waiter.menu_tab': 'Carta',
 
-    // Bar / Kitchen
+    // Bar / Kitchen station
     'station.pending': 'Pendiente',
     'station.ready': 'Listo',
     'station.mark_ready': 'Marcar listo',
@@ -68,6 +68,8 @@ const translations = {
     'station.seconds': 'seg',
     'station.bar_title': 'Barra',
     'station.kitchen_title': 'Cocina',
+    'station.bar': 'Barra',
+    'station.kitchen': 'Cocina',
 
     // Admin
     'admin.title': 'Administración',
@@ -114,9 +116,76 @@ const translations = {
     'admin.staff.roles.bar': 'Barra',
     'admin.staff.roles.kitchen': 'Cocina',
 
-    // Stations
-    'station.bar': 'Barra',
-    'station.kitchen': 'Cocina',
+    // Admin flat keys (used by admin page)
+    'admin.menu': 'Carta',
+    'admin.confirm_delete': '¿Eliminar este elemento?',
+    'admin.tables': 'Mesas',
+    'admin.add': 'Añadir',
+    'admin.edit': 'Editar',
+    'admin.save': 'Guardar',
+    'admin.cancel': 'Cancelar',
+    'admin.no_tables': 'Sin mesas',
+    'admin.no_categories': 'Sin categorías',
+    'admin.no_products': 'Sin productos',
+    'admin.no_staff': 'Sin personal',
+    'admin.table_number': 'Mesa nº',
+    'admin.table_zone': 'Zona',
+    'admin.table_status': 'Estado',
+    'admin.free': 'Libre',
+    'admin.occupied': 'Ocupada',
+    'admin.categories': 'Categorías',
+    'admin.products': 'Productos',
+    'admin.active': 'Activo',
+    'admin.inactive': 'Inactivo',
+    'admin.staff': 'Personal',
+    'admin.bar': 'Barra',
+    'admin.kitchen': 'Cocina',
+    'admin.category_name_es': 'Nombre (ES)',
+    'admin.category_name_zh': 'Nombre (ZH)',
+    'admin.category_station': 'Estación',
+    'admin.category_sort': 'Orden',
+    'admin.product_active': 'Activo',
+    'admin.product_name_es': 'Nombre (ES)',
+    'admin.product_name_zh': 'Nombre (ZH)',
+    'admin.product_price': 'Precio (€)',
+    'admin.product_category': 'Categoría',
+    'admin.staff_name': 'Nombre',
+    'admin.staff_pin': 'PIN',
+    'admin.staff_role': 'Rol',
+    'admin.role_admin': 'Administrador',
+    'admin.role_waiter': 'Camarero',
+    'admin.role_bar': 'Barra',
+    'admin.role_kitchen': 'Cocina',
+
+    // Bar station flat keys
+    'bar.title': 'Barra',
+    'bar.subtitle': 'Pedidos en tiempo real',
+    'bar.table': 'Mesa',
+    'bar.pending': 'Pendiente',
+    'bar.ready': 'Listo',
+    'bar.mark_ready': 'Marcar listo',
+    'bar.no_orders': 'Sin pedidos pendientes',
+    'bar.ago': 'hace',
+    'bar.min': 'min',
+    'bar.sec': 'seg',
+
+    // Kitchen station flat keys
+    'kitchen.title': 'Cocina',
+    'kitchen.subtitle': 'Pedidos en tiempo real',
+    'kitchen.table': 'Mesa',
+    'kitchen.pending': 'Pendiente',
+    'kitchen.ready': 'Listo',
+    'kitchen.mark_ready': 'Marcar listo',
+    'kitchen.no_orders': 'Sin pedidos pendientes',
+    'kitchen.ago': 'hace',
+    'kitchen.min': 'min',
+    'kitchen.sec': 'seg',
+
+    // Waiter additional keys
+    'waiter.all': 'Todo',
+    'waiter.table': 'Mesa',
+    'waiter.confirm_order': 'Confirmar pedido',
+    'waiter.order_error': 'Error al enviar pedido',
   },
   zh: {
     // Login
@@ -170,7 +239,7 @@ const translations = {
     'waiter.order_tab': '订单',
     'waiter.menu_tab': '菜单',
 
-    // Bar / Kitchen
+    // Bar / Kitchen station
     'station.pending': '待处理',
     'station.ready': '已就绪',
     'station.mark_ready': '标记完成',
@@ -181,6 +250,8 @@ const translations = {
     'station.seconds': '秒',
     'station.bar_title': '吧台',
     'station.kitchen_title': '厨房',
+    'station.bar': '吧台',
+    'station.kitchen': '厨房',
 
     // Admin
     'admin.title': '管理面板',
@@ -227,20 +298,80 @@ const translations = {
     'admin.staff.roles.bar': '吧台',
     'admin.staff.roles.kitchen': '厨房',
 
-    // Stations
-    'station.bar': '吧台',
-    'station.kitchen': '厨房',
+    // Admin flat keys
+    'admin.menu': '菜单',
+    'admin.confirm_delete': '确定要删除此项目吗？',
+    'admin.tables': '桌台',
+    'admin.add': '添加',
+    'admin.edit': '编辑',
+    'admin.save': '保存',
+    'admin.cancel': '取消',
+    'admin.no_tables': '暂无桌台',
+    'admin.no_categories': '暂无分类',
+    'admin.no_products': '暂无产品',
+    'admin.no_staff': '暂无员工',
+    'admin.table_number': '桌台编号',
+    'admin.table_zone': '区域',
+    'admin.table_status': '状态',
+    'admin.free': '空闲',
+    'admin.occupied': '使用中',
+    'admin.categories': '分类',
+    'admin.products': '产品',
+    'admin.active': '启用',
+    'admin.inactive': '禁用',
+    'admin.staff': '员工',
+    'admin.bar': '吧台',
+    'admin.kitchen': '厨房',
+    'admin.category_name_es': '名称（西语）',
+    'admin.category_name_zh': '名称（中文）',
+    'admin.category_station': '站台',
+    'admin.category_sort': '排序',
+    'admin.product_active': '启用',
+    'admin.product_name_es': '名称（西语）',
+    'admin.product_name_zh': '名称（中文）',
+    'admin.product_price': '价格（€）',
+    'admin.product_category': '分类',
+    'admin.staff_name': '姓名',
+    'admin.staff_pin': 'PIN码',
+    'admin.staff_role': '角色',
+    'admin.role_admin': '管理员',
+    'admin.role_waiter': '服务员',
+    'admin.role_bar': '吧台',
+    'admin.role_kitchen': '厨房',
+
+    // Bar station flat keys
+    'bar.title': '吧台',
+    'bar.subtitle': '实时订单',
+    'bar.table': '桌',
+    'bar.pending': '待处理',
+    'bar.ready': '已完成',
+    'bar.mark_ready': '标记完成',
+    'bar.no_orders': '暂无待处理订单',
+    'bar.ago': '前',
+    'bar.min': '分钟',
+    'bar.sec': '秒',
+
+    // Kitchen station flat keys
+    'kitchen.title': '厨房',
+    'kitchen.subtitle': '实时订单',
+    'kitchen.table': '桌',
+    'kitchen.pending': '待处理',
+    'kitchen.ready': '已完成',
+    'kitchen.mark_ready': '标记完成',
+    'kitchen.no_orders': '暂无待处理订单',
+    'kitchen.ago': '前',
+    'kitchen.min': '分钟',
+    'kitchen.sec': '秒',
+
+    // Waiter additional keys
+    'waiter.all': '全部',
+    'waiter.table': '桌',
+    'waiter.confirm_order': '确认下单',
+    'waiter.order_error': '下单失败，请重试',
   },
-}
+} as const
 
 export type TranslationKey = keyof typeof translations.es
-
-let currentLocale: Locale = 'es'
-
-export function t(key: TranslationKey, locale?: Locale): string {
-  const loc = locale || currentLocale
-  return (translations[loc] as Record<string, string>)[key] || key
-}
 
 export function useLocale() {
   const [locale, setLocaleState] = useState<Locale>('es')
@@ -249,22 +380,23 @@ export function useLocale() {
     const stored = localStorage.getItem('bargo_locale') as Locale | null
     if (stored === 'es' || stored === 'zh') {
       setLocaleState(stored)
-      currentLocale = stored
     }
   }, [])
 
   const setLocale = useCallback((loc: Locale) => {
     setLocaleState(loc)
-    currentLocale = loc
     localStorage.setItem('bargo_locale', loc)
   }, [])
 
-  const translate = useCallback(
+  const t = useCallback(
     (key: TranslationKey): string => {
-      return (translations[locale] as Record<string, string>)[key] || key
+      return (translations[locale] as Record<string, string>)[key] ?? key
     },
     [locale]
   )
 
-  return { locale, setLocale, t: translate }
+  return { locale, setLocale, t }
 }
+
+// Alias
+export const useI18n = useLocale

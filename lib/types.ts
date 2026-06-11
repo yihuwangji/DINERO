@@ -3,7 +3,6 @@ export interface Profile {
   full_name: string
   role: 'admin' | 'waiter' | 'bar' | 'kitchen'
   pin: string
-  created_at?: string
 }
 
 export interface Table {
@@ -11,7 +10,6 @@ export interface Table {
   number: number
   zone?: string
   status: 'free' | 'occupied'
-  created_at?: string
 }
 
 export interface Category {
@@ -21,7 +19,6 @@ export interface Category {
   station: 'bar' | 'kitchen'
   sort_order: number
   active: boolean
-  created_at?: string
 }
 
 export interface Product {
@@ -33,7 +30,6 @@ export interface Product {
   category?: Category
   active: boolean
   image_url?: string
-  created_at?: string
 }
 
 export interface Order {
